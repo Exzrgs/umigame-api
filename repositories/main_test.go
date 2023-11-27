@@ -2,106 +2,48 @@ package repositories_test
 
 import (
 	"database/sql"
-	"fmt"
 	"os"
-	"os/exec"
 	"testing"
+	"fmt"
 
-	_ "github.com/go-sql-driver/mysql"
+	"umigame-api/utils"
+	"umigame-api/tests"
+
+	"github.com/joho/godotenv"
 )
+/*
+TODO:テストするときはproblem.goのページ数も変更しないといけない。大変マズイ
+*/
 
-var db *sql.DB
+func init(){
+	err := godotenv.Load("../.env")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
 
 var (
-	dbUser     = os.Getenv("DB_USER")
-	dbPassword = os.Getenv("DB_PASSWORD")
-	dbHost     = os.Getenv("DB_HOST")
-	dbPort     = os.Getenv("DB_PORT")
-	dbDatabase = os.Getenv("DB_DATABASE")
-	dbConfig   = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", dbUser, dbPassword, dbHost, dbPort, dbDatabase)
+	db *sql.DB
 )
 
-func connectDB() error {
-	var err error
-	db, err = sql.Open("mysql", dbConfig)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func setupTestData() error {
-	cmd := exec.Command("mysql", "-h", dbHost, "-u", dbUser, dbDatabase, fmt.Sprintf("--password=%s", dbPassword), "-e", "source ./testdata/setupDB.sql")
-
-	err := cmd.Run()
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func cleanupDB() error {
-	//fmt.Println(os.Getwd())
-
-	cmd := exec.Command("mysql", "-h", dbHost, "-u", dbUser, dbDatabase, fmt.Sprintf("--password=%s", dbPassword), "-e", "source ./testdata/cleanupDB.sql")
-
-	// fmt.Println(cmd)
-
-	var err error
-
-	err = cmd.Run()
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func setup() error {
-	err := connectDB()
-	if err != nil {
-		fmt.Println("connect:", err)
-		return err
-	}
-
-	err = cleanupDB()
-	if err != nil {
-		fmt.Println("cleanup:", err)
-		return err
-	}
-
-	err = setupTestData()
-	if err != nil {
-		fmt.Println("setup:", err)
-		return err
-	}
-
-	return nil
-}
-
-func teardown() error {
-	err := cleanupDB()
-	if err != nil {
-		return err
-	}
-
-	db.Close()
-
-	return nil
-}
-
 func TestMain(m *testing.M) {
-	err := setup()
+	var err error
+	db, err = utils.ConnectDB()
 	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	test := tests.Test{DB: db}
+
+	if err := test.Setup(); err != nil {
 		os.Exit(1)
 	}
 
 	m.Run()
 
-	err = teardown()
-	if err != nil {
+	if err := test.Teardown(); err != nil {
 		os.Exit(1)
 	}
 }

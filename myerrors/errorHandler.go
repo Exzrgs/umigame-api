@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/yoshi-zen/sea-turtle/backend/api/middlewares"
+	"umigame-api/middlewares"
 )
 
 func ErrorHandler(w http.ResponseWriter, req *http.Request, err error) {

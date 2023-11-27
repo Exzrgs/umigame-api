@@ -3,8 +3,8 @@ package repositories
 import (
 	"database/sql"
 
-	"github.com/yoshi-zen/sea-turtle/backend/models"
-	"github.com/yoshi-zen/sea-turtle/backend/myerrors"
+	"umigame-api/models"
+	"umigame-api/myerrors"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -14,7 +14,7 @@ const (
 		テストするときは、ここも変更する必要がある.
 		テストケースを増やしてこのままテストできるようにしたい
 	*/
-	ProblemNumPerPage = 20
+	ProblemNumPerPage = 2
 )
 
 // 1ページ何個取得するかを決めないといけない

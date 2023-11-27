@@ -3,9 +3,9 @@ package services
 import (
 	"database/sql"
 
-	"github.com/yoshi-zen/sea-turtle/backend/models"
-	"github.com/yoshi-zen/sea-turtle/backend/myerrors"
-	"github.com/yoshi-zen/sea-turtle/backend/repositories"
+	"umigame-api/models"
+	"umigame-api/myerrors"
+	"umigame-api/repositories"
 )
 
 type ProblemServicer struct {

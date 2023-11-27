@@ -8,6 +8,7 @@ const (
 	InsertDataFailed ErrCode = "D000"
 	GetDataFailed    ErrCode = "D001"
 	UpdateDataFailed ErrCode = "D002"
+	DeleteDataFailed ErrCode = "D003"
 
 	NoData         ErrCode = "S000"
 	EncryptFailed  ErrCode = "S001"

@@ -7,10 +7,10 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/yoshi-zen/sea-turtle/backend/models"
-	"github.com/yoshi-zen/sea-turtle/backend/myerrors"
-	"github.com/yoshi-zen/sea-turtle/backend/repositories"
-	"github.com/yoshi-zen/sea-turtle/backend/utils"
+	"umigame-api/models"
+	"umigame-api/myerrors"
+	"umigame-api/repositories"
+	"umigame-api/utils"
 )
 
 func RegisterUserService(db *sql.DB, auth *models.Auth) error {
