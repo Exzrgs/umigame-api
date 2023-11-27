@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"database/sql"
 
-	"github.com/joho/godotenv"
-
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -20,22 +18,14 @@ var (
 	dbConfig   string
 )
 
-func init() {
-	err := godotenv.Load("../.env")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
+func ConnectDB() (*sql.DB, error) {
 	dbUser = os.Getenv("DB_USER")
 	dbPassword = os.Getenv("DB_PASSWORD")
 	dbHost = os.Getenv("DB_HOST")
 	dbPort = os.Getenv("DB_PORT")
 	dbDatabase = os.Getenv("DB_DATABASE")
 	dbConfig = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", dbUser, dbPassword, dbHost, dbPort, dbDatabase)
-}
 
-func ConnectDB() (*sql.DB, error) {
 	db, err := sql.Open("mysql", dbConfig)
 	if err != nil {
 		return nil, err

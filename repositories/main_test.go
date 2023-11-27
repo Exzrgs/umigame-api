@@ -8,10 +8,20 @@ import (
 
 	"umigame-api/utils"
 	"umigame-api/tests"
+
+	"github.com/joho/godotenv"
 )
 /*
 TODO:テストするときはproblem.goのページ数も変更しないといけない。大変マズイ
 */
+
+func init(){
+	err := godotenv.Load("../.env")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
 
 var (
 	db *sql.DB
