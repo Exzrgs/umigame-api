@@ -7,8 +7,11 @@ import (
 	"net/http"
 	"os"
 
+	"umigame-api/routers"
+
 	"github.com/joho/godotenv"
-	"github.com/yoshi-zen/sea-turtle/backend/api"
+
+	"umigame-api/tasks"
 )
 
 var (
@@ -53,7 +56,9 @@ func main() {
 		return
 	}
 
-	r := api.NewRouter(db)
+	r := routers.NewRouter(db)
+
+	go tasks.ExeTasks(db)
 
 	log.Println("server start at port 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))

@@ -3,9 +3,9 @@ package repositories_test
 import (
 	"testing"
 
-	"github.com/yoshi-zen/sea-turtle/backend/models"
-	"github.com/yoshi-zen/sea-turtle/backend/repositories"
-	"github.com/yoshi-zen/sea-turtle/backend/repositories/testdata"
+	"umigame-api/models"
+	"umigame-api/repositories"
+	"umigame-api/repositories/testdata"
 )
 
 var (

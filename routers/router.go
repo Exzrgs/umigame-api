@@ -1,12 +1,13 @@
-package api
+package routers
 
 import (
 	"database/sql"
 	"net/http"
 
+	"umigame-api/controllers"
+	"umigame-api/middlewares"
+
 	"github.com/gorilla/mux"
-	"github.com/yoshi-zen/sea-turtle/backend/api/middlewares"
-	"github.com/yoshi-zen/sea-turtle/backend/controllers"
 )
 
 func NewRouter(db *sql.DB) *mux.Router {

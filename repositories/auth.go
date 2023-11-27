@@ -3,8 +3,8 @@ package repositories
 import (
 	"database/sql"
 
-	"github.com/yoshi-zen/sea-turtle/backend/models"
-	"github.com/yoshi-zen/sea-turtle/backend/myerrors"
+	"umigame-api/models"
+	"umigame-api/myerrors"
 )
 
 func RegisterUser(db *sql.DB, auth *models.Auth) error {

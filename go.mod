@@ -1,4 +1,4 @@
-module github.com/yoshi-zen/sea-turtle/backend
+module umigame-api
 
 go 1.21.0
 

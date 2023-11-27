@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/yoshi-zen/sea-turtle/backend/models"
-	"github.com/yoshi-zen/sea-turtle/backend/myerrors"
-	"github.com/yoshi-zen/sea-turtle/backend/services"
+	"umigame-api/models"
+	"umigame-api/myerrors"
+	"umigame-api/services"
 )
 
 type ProblemController struct {

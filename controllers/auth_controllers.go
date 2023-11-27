@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/yoshi-zen/sea-turtle/backend/models"
-	"github.com/yoshi-zen/sea-turtle/backend/myerrors"
-	"github.com/yoshi-zen/sea-turtle/backend/services"
+	"umigame-api/models"
+	"umigame-api/myerrors"
+	"umigame-api/services"
 )
 
 type AuthController struct {
@@ -45,4 +45,18 @@ func (c *AuthController) MailCheckHandler(w http.ResponseWriter, req *http.Reque
 	w.WriteHeader(http.StatusNoContent)
 }
 
-func Login() {}
+/*
+メアドとパスワードが送られてくる
+それをDBでチェック？
+Cookieを付与
+*/
+func (c *AuthController) LoginHandler(w http.ResponseWriter, req *http.Request) {
+	var auth models.Auth
+	if err := json.NewDecoder(req.Body).Decode(&auth); err != nil {
+		err = myerrors.ReqDecodeFailed.Wrap(err, "failed to decode json request body")
+		myerrors.ErrorHandler(w, req, err)
+		return
+	}
+
+	// ハッシュを検索、ハッシュからパスワードを検証、
+}
