@@ -9,7 +9,7 @@ import (
 
 /*
 1分起きにactivate_flagをチェック
-TODO: ユニットテスト
+TODO: ユニットテスト この関数を実行した後に、15分以上のやつがなくなっていること
 */
 func activateCheck(db *sql.DB) {
 	const sqlStr = `
