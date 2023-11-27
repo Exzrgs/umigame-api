@@ -1,7 +1,7 @@
 package testdata
 
 import (
-	"github.com/yoshi-zen/sea-turtle/backend/models"
+	"umigame-api/models"
 )
 
 var ProblemTestData = []models.Problem{
