@@ -3,7 +3,7 @@ create table if not exists problems (
     title varchar(100) not null,
     problem_statement text not null,
     answer text not null,
-    created_at datetime
+    created_at datetime not null
 );
 
 insert into problems (title, problem_statement, answer, created_at) values 

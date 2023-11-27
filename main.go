@@ -2,17 +2,22 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"umigame-api/routers"
+	"umigame-api/utils"
+	"umigame-api/tasks"
 
 	"github.com/joho/godotenv"
-
-	"umigame-api/tasks"
 )
+
+func init(){
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 var (
 	db         *sql.DB
@@ -24,35 +29,10 @@ var (
 	dbConfig   string
 )
 
-func init() {
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-
-	dbUser = os.Getenv("DB_USER")
-	dbPassword = os.Getenv("DB_PASSWORD")
-	dbHost = os.Getenv("DB_HOST")
-	dbPort = os.Getenv("DB_PORT")
-	dbDatabase = os.Getenv("DB_DATABASE")
-	dbConfig = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", dbUser, dbPassword, dbHost, dbPort, dbDatabase)
-}
-
-func connectDB() (*sql.DB, error) {
-	var err error
-	db, err = sql.Open("mysql", dbConfig)
-	if err != nil {
-		return nil, err
-	}
-
-	return db, nil
-}
-
 func main() {
-	db, err := connectDB()
+	db, err := utils.ConnectDB()
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return
 	}
 
@@ -60,6 +40,6 @@ func main() {
 
 	go tasks.ExeTasks(db)
 
-	log.Println("server start at port 8080")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Println("server start at port 8000")
+	log.Fatal(http.ListenAndServe(":8000", r))
 }
