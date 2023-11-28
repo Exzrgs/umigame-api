@@ -45,11 +45,6 @@ func (c *AuthController) MailCheckHandler(w http.ResponseWriter, req *http.Reque
 	w.WriteHeader(http.StatusNoContent)
 }
 
-/*
-メアドとパスワードが送られてくる
-それをDBでチェック？
-Cookieを付与
-*/
 func (c *AuthController) LoginHandler(w http.ResponseWriter, req *http.Request) {
 	var auth models.Auth
 	if err := json.NewDecoder(req.Body).Decode(&auth); err != nil {
@@ -57,6 +52,12 @@ func (c *AuthController) LoginHandler(w http.ResponseWriter, req *http.Request) 
 		myerrors.ErrorHandler(w, req, err)
 		return
 	}
+	
+	uuid, err := services.LoginService(c.db, auth.Email, auth.Password)
+	if err != nil {
+		myerrors.ErrorHandler(w, req, err)
+		return
+	}
 
-	// ハッシュを検索、ハッシュからパスワードを検証、
+	json.NewEncoder(w).Encode(models.Uuid{Uuid: uuid})
 }

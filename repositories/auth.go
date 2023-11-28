@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"errors"
 
 	"umigame-api/models"
 	"umigame-api/myerrors"
@@ -14,7 +15,7 @@ func RegisterUser(db *sql.DB, auth *models.Auth) error {
 	`
 
 	if _, err := db.Exec(sqlStr, auth.Email, auth.Hash, auth.Uuid); err != nil {
-		err = myerrors.InsertDataFailed.Wrap(err, "internal server error")
+		err = myerrors.InsertDataFailed.Wrap(err, "email is already used")
 		return err
 	}
 
@@ -44,4 +45,26 @@ func UpdateActivate(db *sql.DB, uuid string) error {
 	}
 
 	return nil
+}
+
+func GetAuthInfo(db *sql.DB, email string) (models.Auth, error) {
+	const sqlStr = `
+	select password_hash, uuid, activate_flag from users
+	where email = ?;
+	`
+
+	var auth models.Auth
+
+	err := db.QueryRow(sqlStr, email).Scan(&auth.Hash, &auth.Uuid, &auth.ActivateFlag)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			err = myerrors.NoData.Wrap(err, "email is not registered")
+			return models.Auth{}, err
+		} else {
+			err = myerrors.GetDataFailed.Wrap(err, "internal server error")
+			return models.Auth{}, err
+		}
+	}
+
+	return auth, nil
 }

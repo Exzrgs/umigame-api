@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"net/mail"
 	"os"
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/google/uuid"
 
@@ -33,6 +34,11 @@ func RegisterUserService(db *sql.DB, auth *models.Auth) error {
 	}
 	mailAuthUuid := uuidObj.String()
 	auth.Uuid = mailAuthUuid
+
+	if err = repositories.RegisterUser(db, auth); err != nil {
+		return err
+	}
+
 	mailMessage := utils.MailMessage(mailAuthUuid)
 	myMail := utils.Mail{
 		Host:     "smtp.gmail.com",
@@ -48,10 +54,6 @@ func RegisterUserService(db *sql.DB, auth *models.Auth) error {
 		return err
 	}
 
-	if err = repositories.RegisterUser(db, auth); err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -62,4 +64,23 @@ func MailCheckService(db *sql.DB, uuid string) error {
 	}
 
 	return nil
+}
+
+func LoginService(db *sql.DB, email string, password string) (string, error) {
+	auth, err := repositories.GetAuthInfo(db, email)
+	if err != nil {
+		return "", err
+	}
+
+	if !auth.ActivateFlag {
+		err := myerrors.NotActivate.Wrap(NotActivate, "email is not valified")
+		return "", err
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(auth.Hash), []byte(password)); err != nil {
+		err = myerrors.InvalidPassword.Wrap(err, "password is not correnct")
+		return "", err
+	}
+
+	return auth.Uuid, nil
 }

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"os"
 	"fmt"
+	"os/exec"
 
 	"github.com/joho/godotenv"
 )
@@ -35,4 +36,27 @@ func init() {
 
 type Test struct {
 	DB *sql.DB
+}
+
+func setupTestData() error {
+	cmd := exec.Command("mysql", "-h", dbHost, "-u", dbUser, dbDatabase, fmt.Sprintf("--password=%s", dbPassword), "-e", "source ./testdata/setupDB.sql")
+
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func cleanupDB() error {
+	cmd := exec.Command("mysql", "-h", dbHost, "-u", dbUser, dbDatabase, fmt.Sprintf("--password=%s", dbPassword), "-e", "source ./testdata/cleanupDB.sql")
+
+	var err error
+	err = cmd.Run()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
