@@ -40,6 +40,6 @@ func main() {
 
 	go tasks.ExeTasks(db)
 
-	log.Println("server start at port 8000")
-	log.Fatal(http.ListenAndServe(":8000", r))
+	log.Println("server start at port 8080")
+	log.Fatal(http.ListenAndServe(":8080", r))
 }

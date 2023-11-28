@@ -12,7 +12,7 @@ func ExeTasks(db *sql.DB) {
 		for {
 			select {
 			case <-t.C:
-				activateCheck(db)
+				ActivateCheck(db)
 			}
 		}
 		t.Stop()

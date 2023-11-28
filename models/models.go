@@ -20,8 +20,13 @@ type User struct {
 }
 
 type Auth struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Hash     string
-	Uuid     string
+	Email        string `json:"email"`
+	Password     string `json:"password"`
+	Hash         string
+	Uuid         string
+	ActivateFlag bool
+}
+
+type Uuid struct {
+	Uuid string `json:"uuid"`
 }
