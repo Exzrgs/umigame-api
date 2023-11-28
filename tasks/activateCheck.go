@@ -11,7 +11,7 @@ import (
 1分起きにactivate_flagをチェック
 TODO: ユニットテスト この関数を実行した後に、15分以上のやつがなくなっていること
 */
-func activateCheck(db *sql.DB) {
+func ActivateCheck(db *sql.DB) {
 	const sqlStr = `
 	delete from users
 	where activate_flag = false and timestampdiff(minute, created_at, now()) >= 15;
