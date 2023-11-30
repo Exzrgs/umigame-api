@@ -29,7 +29,6 @@ var (
 	dbConfig   string
 )
 
-// a
 func main() {
 	db, err := utils.ConnectDB()
 	if err != nil {
