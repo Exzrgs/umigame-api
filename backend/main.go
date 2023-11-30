@@ -6,13 +6,13 @@ import (
 	"net/http"
 
 	"umigame-api/routers"
-	"umigame-api/utils"
 	"umigame-api/tasks"
+	"umigame-api/utils"
 
 	"github.com/joho/godotenv"
 )
 
-func init(){
+func init() {
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal(err)
@@ -29,6 +29,7 @@ var (
 	dbConfig   string
 )
 
+// a
 func main() {
 	db, err := utils.ConnectDB()
 	if err != nil {
