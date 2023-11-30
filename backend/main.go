@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"flag"
 	"log"
 	"net/http"
 
@@ -31,16 +32,19 @@ var (
 
 // a
 func main() {
+	port := flag.String("p", ":8080", "HTTP network port")
+	flag.Parse()
+
 	db, err := utils.ConnectDB()
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	r := routers.NewRouter(db)
+	r := routers.NewRouter(db, *port)
 
 	go tasks.ExeTasks(db)
 
-	log.Println("server start at port 8080")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Printf("server start at port %s", *port)
+	log.Fatal(http.ListenAndServe(*port, r))
 }

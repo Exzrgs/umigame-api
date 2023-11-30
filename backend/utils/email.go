@@ -26,8 +26,8 @@ func (m *Mail) SendMail() error {
 	return nil
 }
 
-func MailMessage(uuid string) string {
-	message := fmt.Sprintf("以下のリンクをクリックしてメールアドレスを認証してください。\nhttp://localhost:8080/auth/mail?uuid=%s\nひとりでウミガメのスープへのアカウント登録に身に覚えがない場合は無視してください。", uuid)
+func MailMessage(port string, uuid string) string {
+	message := fmt.Sprintf("以下のリンクをクリックしてメールアドレスを認証してください。\nhttp://localhost%s/auth/mail?uuid=%s\nひとりでウミガメのスープへのアカウント登録に身に覚えがない場合は無視してください。", port, uuid)
 
 	return message
 }
