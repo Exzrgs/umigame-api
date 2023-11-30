@@ -60,7 +60,7 @@ func (c *Controller) GetProblemDetailHandler(w http.ResponseWriter, req *http.Re
 }
 
 func (c *Controller) PostProblemHandler(w http.ResponseWriter, req *http.Request) {
-	var problem models.Problem
+	var problem models.ProblemDetail
 	if err := json.NewDecoder(req.Body).Decode(&problem); err != nil {
 		err = myerrors.ReqDecodeFailed.Wrap(err, "failed to decode json request body")
 		myerrors.ErrorHandler(w, req, err)

@@ -48,43 +48,43 @@ func SelectProblemList(db *sql.DB, page int) ([]models.ProblemOutline, error) {
 	return problemList, nil
 }
 
-func SelectProblemDetail(db *sql.DB, ID int) (models.Problem, error) {
+func SelectProblemDetail(db *sql.DB, ID int) (models.ProblemDetail, error) {
 	const sqlStr = `
 	select id, title, problem_statement, answer
 	from problems
 	where id = ?;
 	`
 
-	var problem models.Problem
+	var problem models.ProblemDetail
 
 	row := db.QueryRow(sqlStr, ID)
 	if err := row.Err(); err != nil {
 		err = myerrors.GetDataFailed.Wrap(err, "failed to get data")
-		return models.Problem{}, err
+		return models.ProblemDetail{}, err
 	}
 
-	err := row.Scan(&problem.ID, &problem.Title, &problem.ProblemStatement, &problem.Answer)
+	err := row.Scan(&problem.ID, &problem.Title, &problem.ProblemStatement, &problem.ProblemAnswer)
 	if err != nil {
 		err = myerrors.GetDataFailed.Wrap(err, "failed to get data")
-		return models.Problem{}, err
+		return models.ProblemDetail{}, err
 	}
 
 	return problem, nil
 }
 
-func InsertProblem(db *sql.DB, problem models.Problem) (models.Problem, error) {
+func InsertProblem(db *sql.DB, problem models.ProblemDetail) (models.ProblemDetail, error) {
 	const sqlStr = `
 	insert into problems (title, problem_statement, answer, created_at) values
 	(?, ?, ?, now());
 	`
 
-	var newProblem models.Problem
-	newProblem.Title, newProblem.ProblemStatement, newProblem.Answer = problem.Title, problem.ProblemStatement, problem.Answer
+	var newProblem models.ProblemDetail
+	newProblem.Title, newProblem.ProblemStatement, newProblem.ProblemAnswer = problem.Title, problem.ProblemStatement, problem.ProblemAnswer
 
-	result, err := db.Exec(sqlStr, problem.Title, problem.ProblemStatement, problem.Answer)
+	result, err := db.Exec(sqlStr, problem.Title, problem.ProblemStatement, problem.ProblemAnswer)
 	if err != nil {
 		err = myerrors.InsertDataFailed.Wrap(err, "failed to insert data")
-		return models.Problem{}, err
+		return models.ProblemDetail{}, err
 	}
 
 	id, _ := result.LastInsertId()

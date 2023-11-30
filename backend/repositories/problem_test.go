@@ -28,7 +28,7 @@ func TestSelectProblemList(t *testing.T) {
 	tests := []struct {
 		title    string
 		page     int
-		expected []models.Problem
+		expected []models.ProblemOutline
 	}{
 		{
 			title:    "1",
@@ -62,7 +62,7 @@ func TestSelectProblemDetail(t *testing.T) {
 	tests := []struct {
 		title    string
 		ID       int
-		expected models.Problem
+		expected models.ProblemDetail
 	}{
 		{
 			title:    "1",
@@ -100,11 +100,11 @@ func TestSelectProblemDetail(t *testing.T) {
 func TestInsertProblem(t *testing.T) {
 	tests := []struct {
 		title   string
-		problem models.Problem
+		problem models.ProblemDetail
 	}{
 		{
 			title: "1",
-			problem: models.Problem{
+			problem: models.ProblemDetail{
 				Title:            "test1",
 				ProblemStatement: "tes1tes1",
 				Answer:           "tes1tes1tes1",
@@ -112,7 +112,7 @@ func TestInsertProblem(t *testing.T) {
 		},
 		{
 			title: "2",
-			problem: models.Problem{
+			problem: models.ProblemDetail{
 				Title:            "test2",
 				ProblemStatement: "tes2tes2",
 				Answer:           "tes2tes2tes2",
@@ -120,7 +120,7 @@ func TestInsertProblem(t *testing.T) {
 		},
 		{
 			title: "3",
-			problem: models.Problem{
+			problem: models.ProblemDetail{
 				Title:            "test3",
 				ProblemStatement: "tes3tes3",
 				Answer:           "tes3tes3tes3",

@@ -24,20 +24,20 @@ func (s *Servicer) GetProblemListService(page int) ([]models.ProblemOutline, err
 	return problemList, nil
 }
 
-func (s *Servicer) GetProblemDetailService(id int) (models.Problem, error) {
+func (s *Servicer) GetProblemDetailService(id int) (models.ProblemDetail, error) {
 	problem, err := repositories.SelectProblemDetail(s.db, id)
 	if err != nil {
-		return models.Problem{}, err
+		return models.ProblemDetail{}, err
 	}
 
 	return problem, nil
 }
 
-func (s *Servicer) PostProblemService(problem models.Problem) (models.Problem, error) {
+func (s *Servicer) PostProblemService(problem models.ProblemDetail) (models.ProblemDetail, error) {
 	// この変数名は要検討
 	newProblem, err := repositories.InsertProblem(s.db, problem)
 	if err != nil {
-		return models.Problem{}, err
+		return models.ProblemDetail{}, err
 	}
 
 	return newProblem, nil
