@@ -6,9 +6,6 @@ import (
 	"umigame-api/repositories"
 )
 
-type ProblemServicer struct {
-}
-
 /*
 一個も問題が入手できないときのエラー処理をどうするか
 ここでリストのサイズ取得して処理しよう
