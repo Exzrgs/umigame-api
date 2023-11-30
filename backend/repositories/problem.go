@@ -19,9 +19,9 @@ const (
 
 // 1ページ何個取得するかを決めないといけない
 // 一旦20問
-func SelectProblemList(db *sql.DB, page int) ([]models.Problem, error) {
+func SelectProblemList(db *sql.DB, page int) ([]models.ProblemOutline, error) {
 	const sqlStr = `
-	select id, title, problem_statement, answer
+	select id, title, is_solved, created_at
 	from problems
 	limit ? offset ?;
 	`
@@ -33,11 +33,11 @@ func SelectProblemList(db *sql.DB, page int) ([]models.Problem, error) {
 	}
 	defer rows.Close()
 
-	problemList := make([]models.Problem, 0)
+	problemList := make([]models.ProblemOutline, 0)
 
 	for rows.Next() {
-		var problem models.Problem
-		err := rows.Scan(&problem.ID, &problem.Title, &problem.ProblemStatement, &problem.Answer)
+		var problem models.ProblemOutline
+		err := rows.Scan(&problem.ID, &problem.Title, &problem.IsSolved, &problem.CreatedAt)
 		if err != nil {
 			err = myerrors.GetDataFailed.Wrap(err, "failed to get data")
 			return nil, err

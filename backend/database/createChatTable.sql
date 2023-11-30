@@ -1,4 +1,4 @@
-create table if not exists chat (
+create table if not exists chats (
     id integer primary key,
     problem_id integer unique not null,
     user_id integer unique not null,

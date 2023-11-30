@@ -10,7 +10,7 @@ import (
 一個も問題が入手できないときのエラー処理をどうするか
 ここでリストのサイズ取得して処理しよう
 */
-func (s *Servicer) GetProblemListService(page int) ([]models.Problem, error) {
+func (s *Servicer) GetProblemListService(page int) ([]models.ProblemOutline, error) {
 	problemList, err := repositories.SelectProblemList(s.db, page)
 	if err != nil {
 		return nil, err
