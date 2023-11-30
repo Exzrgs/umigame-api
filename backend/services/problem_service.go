@@ -1,22 +1,17 @@
 package services
 
 import (
-	"database/sql"
-
 	"umigame-api/models"
 	"umigame-api/myerrors"
 	"umigame-api/repositories"
 )
 
-type ProblemServicer struct {
-}
-
 /*
 一個も問題が入手できないときのエラー処理をどうするか
 ここでリストのサイズ取得して処理しよう
 */
-func GetProblemListService(db *sql.DB, page int) ([]models.Problem, error) {
-	problemList, err := repositories.SelectProblemList(db, page)
+func (s *Servicer) GetProblemListService(page int) ([]models.Problem, error) {
+	problemList, err := repositories.SelectProblemList(s.db, page)
 	if err != nil {
 		return nil, err
 	}
@@ -29,8 +24,8 @@ func GetProblemListService(db *sql.DB, page int) ([]models.Problem, error) {
 	return problemList, nil
 }
 
-func GetProblemDetailService(db *sql.DB, ID int) (models.Problem, error) {
-	problem, err := repositories.SelectProblemDetail(db, ID)
+func (s *Servicer) GetProblemDetailService(id int) (models.Problem, error) {
+	problem, err := repositories.SelectProblemDetail(s.db, id)
 	if err != nil {
 		return models.Problem{}, err
 	}
@@ -38,9 +33,9 @@ func GetProblemDetailService(db *sql.DB, ID int) (models.Problem, error) {
 	return problem, nil
 }
 
-func PostProblemService(db *sql.DB, problem models.Problem) (models.Problem, error) {
+func (s *Servicer) PostProblemService(problem models.Problem) (models.Problem, error) {
 	// この変数名は要検討
-	newProblem, err := repositories.InsertProblem(db, problem)
+	newProblem, err := repositories.InsertProblem(s.db, problem)
 	if err != nil {
 		return models.Problem{}, err
 	}
