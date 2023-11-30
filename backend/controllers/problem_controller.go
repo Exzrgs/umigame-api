@@ -1,25 +1,15 @@
 package controllers
 
 import (
-	"database/sql"
 	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"umigame-api/models"
 	"umigame-api/myerrors"
-	"umigame-api/services"
 )
 
-type ProblemController struct {
-	db *sql.DB
-}
-
-func NewProblemController(db *sql.DB) *ProblemController {
-	return &ProblemController{db: db}
-}
-
-func (c *ProblemController) GetProblemListHandler(w http.ResponseWriter, req *http.Request) {
+func (c *Controller) GetProblemListHandler(w http.ResponseWriter, req *http.Request) {
 	var page int
 	q := req.URL.Query()
 	p, ok := q["page"]
@@ -37,7 +27,7 @@ func (c *ProblemController) GetProblemListHandler(w http.ResponseWriter, req *ht
 		return
 	}
 
-	problemList, err := services.GetProblemListService(c.db, page)
+	problemList, err := c.service.GetProblemListService(page)
 	if err != nil {
 		myerrors.ErrorHandler(w, req, err)
 		return
@@ -46,13 +36,13 @@ func (c *ProblemController) GetProblemListHandler(w http.ResponseWriter, req *ht
 	json.NewEncoder(w).Encode(problemList)
 }
 
-func (c *ProblemController) GetProblemDetailHandler(w http.ResponseWriter, req *http.Request) {
-	var ID int
+func (c *Controller) GetProblemDetailHandler(w http.ResponseWriter, req *http.Request) {
+	var id int
 	q := req.URL.Query()
-	id, ok := q["id"]
-	if ok && len(id) > 0 {
+	idStr, ok := q["id"]
+	if ok && len(idStr) > 0 {
 		var err error
-		ID, err = strconv.Atoi(id[0])
+		id, err = strconv.Atoi(idStr[0])
 		if err != nil {
 			err = myerrors.BadParameter.Wrap(err, "query parameter must be number")
 			myerrors.ErrorHandler(w, req, err)
@@ -60,7 +50,7 @@ func (c *ProblemController) GetProblemDetailHandler(w http.ResponseWriter, req *
 		}
 	}
 
-	problem, err := services.GetProblemDetailService(c.db, ID)
+	problem, err := c.service.GetProblemDetailService(id)
 	if err != nil {
 		myerrors.ErrorHandler(w, req, err)
 		return
@@ -69,14 +59,14 @@ func (c *ProblemController) GetProblemDetailHandler(w http.ResponseWriter, req *
 	json.NewEncoder(w).Encode(problem)
 }
 
-func (c *ProblemController) PostProblemHandler(w http.ResponseWriter, req *http.Request) {
+func (c *Controller) PostProblemHandler(w http.ResponseWriter, req *http.Request) {
 	var problem models.Problem
 	if err := json.NewDecoder(req.Body).Decode(&problem); err != nil {
 		err = myerrors.ReqDecodeFailed.Wrap(err, "failed to decode json request body")
 		myerrors.ErrorHandler(w, req, err)
 	}
 
-	newProblem, err := services.PostProblemService(c.db, problem)
+	newProblem, err := c.service.PostProblemService(problem)
 	if err != nil {
 		myerrors.ErrorHandler(w, req, err)
 		return

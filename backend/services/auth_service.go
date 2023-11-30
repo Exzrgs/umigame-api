@@ -1,20 +1,19 @@
 package services
 
 import (
-	"database/sql"
 	"net/mail"
 	"os"
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/google/uuid"
 
-	"umigame-api/models"
 	"umigame-api/myerrors"
 	"umigame-api/repositories"
 	"umigame-api/utils"
+	"umigame-api/models"
 )
 
-func RegisterUserService(db *sql.DB, auth *models.Auth) error {
+func (s *Servicer) RegisterUserService(auth models.Auth) error {
 	if _, err := mail.ParseAddress(auth.Email); err != nil {
 		err = myerrors.EmailInvalid.Wrap(err, "email invalid")
 		return err
@@ -35,11 +34,11 @@ func RegisterUserService(db *sql.DB, auth *models.Auth) error {
 	mailAuthUuid := uuidObj.String()
 	auth.Uuid = mailAuthUuid
 
-	if err = repositories.RegisterUser(db, auth); err != nil {
+	if err = repositories.RegisterUser(s.db, &auth); err != nil {
 		return err
 	}
 
-	mailMessage := utils.MailMessage(mailAuthUuid)
+	mailMessage := utils.MailMessage(s.port, mailAuthUuid)
 	myMail := utils.Mail{
 		Host:     "smtp.gmail.com",
 		Port:     "587",
@@ -57,8 +56,8 @@ func RegisterUserService(db *sql.DB, auth *models.Auth) error {
 	return nil
 }
 
-func MailCheckService(db *sql.DB, uuid string) error {
-	err := repositories.UpdateActivate(db, uuid)
+func (s *Servicer) MailCheckService(uuid string) error {
+	err := repositories.UpdateActivate(s.db, uuid)
 	if err != nil {
 		return err
 	}
@@ -66,8 +65,8 @@ func MailCheckService(db *sql.DB, uuid string) error {
 	return nil
 }
 
-func LoginService(db *sql.DB, email string, password string) (string, error) {
-	auth, err := repositories.GetAuthInfo(db, email)
+func (s *Servicer) LoginService(email string, password string) (string, error) {
+	auth, err := repositories.GetAuthInfo(s.db, email)
 	if err != nil {
 		return "", err
 	}
