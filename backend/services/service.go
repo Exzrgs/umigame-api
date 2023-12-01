@@ -22,13 +22,13 @@ type AuthServicer interface {
 mainやroutersから情報が欲しいときに使う
 それ以外からは引数で受け取る
 */
-type Servicer struct {
+type Service struct {
 	db   *sql.DB
 	port string
 }
 
-func NewServicer(db *sql.DB, port string) *Servicer {
-	return &Servicer{
+func NewServicer(db *sql.DB, port string) *Service {
+	return &Service{
 		db:   db,
 		port: port,
 	}

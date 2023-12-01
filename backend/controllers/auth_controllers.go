@@ -8,7 +8,7 @@ import (
 	"umigame-api/myerrors"
 )
 
-func (c *Controller) RegisterUserHandler(w http.ResponseWriter, req *http.Request) {
+func (c *AuthController) RegisterUserHandler(w http.ResponseWriter, req *http.Request) {
 	var auth models.Auth
 	if err := json.NewDecoder(req.Body).Decode(&auth); err != nil {
 		err = myerrors.ReqDecodeFailed.Wrap(err, "failed to decode json request body")
@@ -24,7 +24,7 @@ func (c *Controller) RegisterUserHandler(w http.ResponseWriter, req *http.Reques
 	w.WriteHeader(http.StatusCreated)
 }
 
-func (c *Controller) MailCheckHandler(w http.ResponseWriter, req *http.Request) {
+func (c *AuthController) MailCheckHandler(w http.ResponseWriter, req *http.Request) {
 	uuid := req.URL.Query().Get("uuid")
 
 	if err := c.service.MailCheckService(uuid); err != nil {
@@ -35,7 +35,7 @@ func (c *Controller) MailCheckHandler(w http.ResponseWriter, req *http.Request) 
 	w.WriteHeader(http.StatusNoContent)
 }
 
-func (c *Controller) LoginHandler(w http.ResponseWriter, req *http.Request) {
+func (c *AuthController) LoginHandler(w http.ResponseWriter, req *http.Request) {
 	var auth models.Auth
 	if err := json.NewDecoder(req.Body).Decode(&auth); err != nil {
 		err = myerrors.ReqDecodeFailed.Wrap(err, "failed to decode json request body")

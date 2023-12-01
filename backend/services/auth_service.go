@@ -13,7 +13,7 @@ import (
 	"umigame-api/models"
 )
 
-func (s *Servicer) RegisterUserService(auth models.Auth) error {
+func (s *Service) RegisterUserService(auth models.Auth) error {
 	if _, err := mail.ParseAddress(auth.Email); err != nil {
 		err = myerrors.EmailInvalid.Wrap(err, "email invalid")
 		return err
@@ -56,7 +56,7 @@ func (s *Servicer) RegisterUserService(auth models.Auth) error {
 	return nil
 }
 
-func (s *Servicer) MailCheckService(uuid string) error {
+func (s *Service) MailCheckService(uuid string) error {
 	err := repositories.UpdateActivate(s.db, uuid)
 	if err != nil {
 		return err
@@ -65,7 +65,7 @@ func (s *Servicer) MailCheckService(uuid string) error {
 	return nil
 }
 
-func (s *Servicer) LoginService(email string, password string) (string, error) {
+func (s *Service) LoginService(email string, password string) (string, error) {
 	auth, err := repositories.GetAuthInfo(s.db, email)
 	if err != nil {
 		return "", err
