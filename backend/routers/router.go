@@ -15,7 +15,7 @@ func NewRouter(db *sql.DB, port string) *mux.Router {
 	r := mux.NewRouter()
 
 	s := services.NewServicer(db, port)
-	c := controllers.NewController(s, db)
+	c := controllers.NewController(s)
 
 	r.HandleFunc("/problem/list", c.GetProblemListHandler).Methods(http.MethodGet)
 	r.HandleFunc("/problem/detail", c.GetProblemDetailHandler).Methods(http.MethodGet)

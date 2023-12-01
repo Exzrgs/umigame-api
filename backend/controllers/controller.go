@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"database/sql"
-
 	"umigame-api/services"
 )
 
@@ -12,12 +10,10 @@ mainやroutersから情報が欲しいときに使う
 */
 type Controller struct {
 	service *services.Servicer
-	db      *sql.DB
 }
 
-func NewController(s *services.Servicer, db *sql.DB)*Controller{
+func NewController(s *services.Servicer)*Controller{
 	return &Controller{
 		service: s,
-		db: db,
 	}
 }
