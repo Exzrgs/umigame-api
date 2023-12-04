@@ -9,6 +9,14 @@ import (
 	"umigame-api/myerrors"
 )
 
+// @Summary 問題リストの取得
+// @Description 問題リストの取得
+// @Accept json
+// @Produce json
+// @Security UUID
+// @Success 200
+// @Failure 400
+// @Router /problem/list [get]
 func (c *ProblemController) GetProblemListHandler(w http.ResponseWriter, req *http.Request) {
 	var page int
 	q := req.URL.Query()
