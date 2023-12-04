@@ -7,9 +7,9 @@ import (
 )
 
 type ProblemServicer interface {
-	GetProblemListService(page int) ([]models.ProblemOutline, error)
-	GetProblemDetailService(id int) (models.ProblemDetail, error)
-	PostProblemService(problem models.ProblemDetail) (models.ProblemDetail, error)
+	GetProblemListService(page int) ([]models.Problem, error)
+	GetProblemDetailService(id int) (models.Problem, error)
+	PostProblemService(problem models.Problem) (models.Problem, error)
 }
 
 type AuthServicer interface {

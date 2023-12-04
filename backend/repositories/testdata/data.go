@@ -4,7 +4,7 @@ import (
 	"umigame-api/models"
 )
 
-var ProblemTestData = []models.ProblemDetail{
+var ProblemTestData = []models.Problem{
 	{
 		ID:               1,
 		Title:            "test1",
