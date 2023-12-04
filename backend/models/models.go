@@ -26,6 +26,6 @@ type Auth struct {
 	Email        string `json:"email ,omitempty"`
 	Password     string `json:"password ,omitempty"`
 	Hash         string `json:"-"`
-	Uuid         string `json:"-"`
+	Uuid         string `json:"uuid"`
 	ActivateFlag bool   `json:"-"`
 }
