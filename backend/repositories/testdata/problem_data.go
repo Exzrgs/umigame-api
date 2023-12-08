@@ -1,8 +1,6 @@
 package testdata
 
 import (
-	"time"
-
 	"umigame-api/models"
 )
 
@@ -14,36 +12,32 @@ var SelectProblemList_Basic = []models.Problem{
 		Title:     "test1",
 		Author:    "test1",
 		Statement: "test1",
-		CreatedAt: time.Now(),
 	},
 	{
 		ID:        2,
 		Title:     "test2",
 		Author:    "test2",
 		Statement: "test2",
-		CreatedAt: time.Now(),
 	},
 	{
 		ID:        3,
 		Title:     "test3",
 		Author:    "test3",
 		Statement: "test3",
-		CreatedAt: time.Now(),
 	},
 }
 
 ///////////////////////////////////////////////////////////
 
-var SelectProblemDetail_Basic = []models.Problem{
+var SelectProblem_Basic = []models.Problem{
 	{
 		ID:           1,
-		Title:        "test",
-		Statement:    "test",
-		Answer:       "test",
-		Author:       "test",
-		Reference:    "test",
-		ReferenceURL: "test",
-		CreatedAt:    time.Now(),
+		Title:        "test1",
+		Statement:    "test1",
+		Answer:       "test1",
+		Author:       "test1",
+		Reference:    "test1",
+		ReferenceURL: "test1",
 	},
 }
 
@@ -160,10 +154,19 @@ var InsertProblem_Char = []models.Problem{
 		Reference:    "test",
 		ReferenceURL: "test",
 	},
+	{
+		Title:        "✲𝑩𝑰𝑮 𝑳𝑶𝑽𝑬😎𖧡",
+		Statement:    "test",
+		Answer:       "test",
+		Author:       "test",
+		Reference:    "test",
+		ReferenceURL: "test",
+	},
 }
 
 var InsertProblem_TooLong = []models.Problem{
 	{
+		// 666 char count
 		Title:        "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
 		Statement:    "test",
 		Answer:       "test",
