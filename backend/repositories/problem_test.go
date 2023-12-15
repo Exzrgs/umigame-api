@@ -2,8 +2,6 @@ package repositories_test
 
 import (
 	"testing"
-	"database/sql"
-	"errors"
 
 	"umigame-api/models"
 	"umigame-api/repositories"
@@ -22,7 +20,7 @@ func TestSelectProblemList_OK(t *testing.T) {
 		expected []models.Problem
 	}{
 		{
-			name:     "1",
+			name:     "basic",
 			expected: testdata.SelectProblemList_Basic,
 		},
 	}
@@ -97,7 +95,7 @@ func TestInsertProblem_Basic_OK(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		t.Run(test.title, func(t *testing.T) {
+		t.Run(test.name, func(t *testing.T) {
 			problem, err := repositories.InsertProblem(db, test.problem)
 			if err != nil {
 				t.Fatal(err)
@@ -139,32 +137,32 @@ func TestInsertProblem_NoData_NG(t *testing.T) {
 		{
 			title:    "no title",
 			problem:  testdata.InsertProblem_NoData[0],
-			expected: "cause error"
+			expected: "cause insert error",
 		},
 		{
 			title:    "no statement",
 			problem:  testdata.InsertProblem_NoData[1],
-			expected: "cause error"
+			expected: "cause insert error",
 		},
 		{
 			title:    "no answer",
 			problem:  testdata.InsertProblem_NoData[2],
-			expected: "cause error"
+			expected: "cause insert error",
 		},
 		{
 			title:    "no author",
 			problem:  testdata.InsertProblem_NoData[3],
-			expected: "cause error"
+			expected: "cause insert error",
 		},
 		{
 			title:    "no reference",
 			problem:  testdata.InsertProblem_NoData[4],
-			expected: "cause error"
+			expected: "cause insert error",
 		},
 		{
 			title:    "no reference_url",
 			problem:  testdata.InsertProblem_NoData[5],
-			expected: "cause error"
+			expected: "cause insert error",
 		},
 	}
 
@@ -253,32 +251,32 @@ func TestInsertProblem_TooLong_NG(t *testing.T) {
 		{
 			title:    "too long title",
 			problem:  testdata.InsertProblem_TooLong[0],
-			expected: "cause error"
+			expected: "cause insert error",
 		},
 		{
 			title:    "too long author",
 			problem:  testdata.InsertProblem_TooLong[1],
-			expected: "cause error"
+			expected: "cause insert error",
 		},
 		{
 			title:    "too long reference",
 			problem:  testdata.InsertProblem_TooLong[2],
-			expected: "cause error"
+			expected: "cause insert error",
 		},
 		{
 			title:    "too long author",
 			problem:  testdata.InsertProblem_TooLong[3],
-			expected: "cause error"
+			expected: "cause insert error",
 		},
 		{
 			title:    "too long reference",
 			problem:  testdata.InsertProblem_TooLong[4],
-			expected: "cause error"
+			expected: "cause insert error",
 		},
 		{
 			title:    "too long reference_url",
 			problem:  testdata.InsertProblem_TooLong[5],
-			expected: "cause error"
+			expected: "cause insert error",
 		},
 	}
 
