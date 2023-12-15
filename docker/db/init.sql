@@ -38,10 +38,3 @@ CREATE TABLE IF NOT EXISTS chats (
     FOREIGN KEY problem_id REFERENCES problems(id),
     FOREIGN KEY user_id REFERENCES users(id)
 );
-
-INSERT INTO problems (title, statement, answer, author, reference, reference_url) values
-('test1', 'test1', 'test1', 'test1', 'test1', 'test1',);
-INSERT INTO problems (title, statement, answer, author, reference, reference_url) values
-('test2', 'test2', 'test2', 'test2', 'test2', 'test2',);
-INSERT INTO problems (title, statement, answer, author, reference, reference_url) values
-('test3', 'test3', 'test3', 'test3', 'test3', 'test3',);

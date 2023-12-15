@@ -2,8 +2,6 @@ package models
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
 /*
@@ -25,12 +23,16 @@ type User struct {
 	ID           int
 	Name         string
 	Email        string
-	Password     string
-	Hash         string
-	Uuid         uuid.UUID
-	ActivateFlag bool
-	SolvedList   []int
+	PasswordHash string
+	UUID         string
+	IsValid      bool
 	CreatedAt    time.Time
+}
+
+type Activity struct {
+	UserID        int
+	Solved        []int
+	LikedProblems []int
 }
 
 type Chat struct {
