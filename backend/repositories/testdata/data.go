@@ -9,18 +9,18 @@ var ProblemTestData = []models.Problem{
 		ID:               1,
 		Title:            "test1",
 		ProblemStatement: "赤くて甘い果物は?",
-		Answer:           "りんご",
+		ProblemAnswer:    "りんご",
 	},
 	{
 		ID:               2,
 		Title:            "test2",
 		ProblemStatement: "黄色で酸っぱい果物は?",
-		Answer:           "レモン",
+		ProblemAnswer:    "レモン",
 	},
 	{
 		ID:               3,
 		Title:            "test3",
 		ProblemStatement: "紫で甘い果物は?",
-		Answer:           "ぶどう",
+		ProblemAnswer:    "ぶどう",
 	},
 }

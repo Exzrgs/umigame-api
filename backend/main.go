@@ -30,7 +30,6 @@ var (
 	dbConfig   string
 )
 
-// a
 func main() {
 	port := flag.String("p", ":8080", "HTTP network port")
 	flag.Parse()

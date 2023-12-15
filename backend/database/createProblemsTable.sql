@@ -4,7 +4,8 @@ create table if not exists problems (
     id integer unsigned auto_increment primary key,
     title varchar(100) not null,
     problem_statement text not null,
-    answer text not null,
+    problem_answer text not null,
+    is_solved boolean not null,
     created_at datetime
 );
 

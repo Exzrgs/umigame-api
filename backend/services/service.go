@@ -2,20 +2,34 @@ package services
 
 import (
 	"database/sql"
+
+	"umigame-api/models"
 )
+
+type ProblemServicer interface {
+	GetProblemListService(page int) ([]models.Problem, error)
+	GetProblemDetailService(id int) (models.Problem, error)
+	PostProblemService(problem models.Problem) (models.Problem, error)
+}
+
+type AuthServicer interface {
+	RegisterUserService(auth models.Auth) error
+	MailCheckService(uuid string) error
+	LoginService(email string, password string) (string, error)
+}
 
 /*
 mainやroutersから情報が欲しいときに使う
 それ以外からは引数で受け取る
 */
-type Servicer struct {
+type Service struct {
 	db   *sql.DB
 	port string
 }
 
-func NewServicer(db *sql.DB, port string)*Servicer{
-	return &Servicer{
-		db: db,
+func NewServicer(db *sql.DB, port string) *Service {
+	return &Service{
+		db:   db,
 		port: port,
 	}
 }

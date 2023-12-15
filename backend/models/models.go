@@ -2,31 +2,42 @@ package models
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
 
+/*
+Here is DB models
+*/
+
 type Problem struct {
-	ID               int       `json:"id"`
-	Title            string    `json:"title"`
-	ProblemStatement string    `json:"problem_statement"`
-	Answer           string    `json:"answer"`
-	CreatedAt        time.Time `json:"created_at"`
+	ID           int
+	Title        string
+	Statement    string
+	Answer       string
+	Author       string
+	Reference    string
+	ReferenceURL string
+	CreatedAt    time.Time
 }
 
 type User struct {
-	ID         int       `json:"id"`
-	Name       string    `json:"name"`
-	SolvedList []int     `json:"solved_list"`
-	CreatedAt  time.Time `json:"created_at"`
-}
-
-type Auth struct {
-	Email        string `json:"email"`
-	Password     string `json:"password"`
+	ID           int
+	Name         string
+	Email        string
+	Password     string
 	Hash         string
-	Uuid         string
+	Uuid         uuid.UUID
 	ActivateFlag bool
+	SolvedList   []int
+	CreatedAt    time.Time
 }
 
-type Uuid struct {
-	Uuid string `json:"uuid"`
+type Chat struct {
+	ChatID    int
+	ProblemID int
+	UserID    int
+	Question  string
+	Answer    string
+	CreatedAt time.Time
 }
