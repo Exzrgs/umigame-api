@@ -7,21 +7,41 @@ import (
 )
 
 /*
-一個も問題が入手できないときのエラー処理をどうするか
-ここでリストのサイズ取得して処理しよう
+pageは必要
+アクティビティも取得
 */
-func (s *Service) GetProblemListService(page int) ([]models.Problem, error) {
+func (s *Service) GetProblemListService(page int) (map[int]models.ProblemBase, error) {
 	problemList, err := repositories.SelectProblemList(s.db, page)
 	if err != nil {
 		return nil, err
 	}
-
 	if len(problemList) == 0 {
 		err := myerrors.NoData.Wrap(NoData, "0 problem found")
 		return nil, err
 	}
 
-	return problemList, nil
+	problemIDs := make([]int, ProblemNumPerPage)
+	for i, problem := range problemList {
+		problemIDs[i] = problem.ID
+	}
+	activityList, err := repositories.GetActivityList(s.db, userID, problemIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	response := make(map[int]models.ProblemBase, ProblemNumPerPage)
+	for _, problem := range problemList {
+		var problemBase models.ProblemBase
+		problemBase.Title, problemBase.Author, problemBase.Statement, problemBase.CreatedAt = problem.Title, problem.Author, problem.Statement, problem.CreatedAt
+		problemBase.IsSolved, problemBase.IsLiked = false, false
+		response[problem.ID] = problemBase
+	}
+	for _, activity := range activityList {
+		response[activity.ProblemID].IsSolved = activity.IsSolved
+		response[activity.ProblemID].IsLiked = activity.IsLiked
+	}
+
+	return response, nil
 }
 
 func (s *Service) GetProblemDetailService(id int) (models.Problem, error) {

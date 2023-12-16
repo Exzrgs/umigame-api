@@ -18,24 +18,7 @@ import (
 // @Failure 400
 // @Router /problem/list [get]
 func (c *ProblemController) GetProblemListHandler(w http.ResponseWriter, req *http.Request) {
-	var page int
-	q := req.URL.Query()
-	p, ok := q["page"]
-	if ok && len(p) > 0 {
-		var err error
-		page, err = strconv.Atoi(p[0])
-		if err != nil {
-			err = myerrors.BadParameter.Wrap(err, "query parameter must be number")
-			myerrors.ErrorHandler(w, req, err)
-			return
-		}
-	} else {
-		err := myerrors.BadParameter.Wrap(NoQueryParameter, "must have page query parameter")
-		myerrors.ErrorHandler(w, req, err)
-		return
-	}
-
-	problemList, err := c.service.GetProblemListService(page)
+	problem, err := c.service.GetProblemListService()
 	if err != nil {
 		myerrors.ErrorHandler(w, req, err)
 		return

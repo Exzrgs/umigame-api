@@ -10,6 +10,9 @@ GetProblemList : Response
 type ProblemBase struct {
 	Title     string
 	Author    string
+	Statement string
+	IsSolved  bool
+	IsLiked   bool
 	CreatedAt time.Time
 }
 

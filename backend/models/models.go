@@ -30,9 +30,10 @@ type User struct {
 }
 
 type Activity struct {
-	UserID        int
-	Solved        []int
-	LikedProblems []int
+	UserID    int  `db:"user_id"`
+	ProblemID int  `db:"problem_id"`
+	IsSolved  bool `db:"is_solved"`
+	IsLiked   bool `db:"is_liked"`
 }
 
 type Chat struct {
