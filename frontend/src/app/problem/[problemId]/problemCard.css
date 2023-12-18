@@ -1,0 +1,58 @@
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 16px;
+    margin: 8px;
+    background-color: #fff;
+    position: relative;
+    /* カードを相対位置に設定 */
+    height: 100%;
+}
+
+.card-id {
+    position: absolute;
+    /* IDを絶対位置に設定 */
+    top: 8px;
+    /* 上からの距離を調整 */
+    left: 8px;
+    /* 左からの距離を調整 */
+    font-size: 20px;
+    /* フォントサイズを調整 */
+}
+
+.card-title {
+    font-size: 2rem;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-left: 8px;
+}
+
+.card-description {
+    font-size: 1.2rem;
+    color: #000000;
+    margin-top: 40px;
+    /* 説明の上部マージンを追加 */
+    margin-left: 8px;
+}
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* 3列に配置 */
+    gap: 16px;
+    /* カード間の隙間を設定 */
+}
+
+.card-date {
+    position: absolute;
+    /* 日付を絶対位置に設定 */
+    bottom: 8px;
+    /* 下からの距離を調整 */
+    right: 8px;
+    /* 右からの距離を調整 */
+    font-size: 10px;
+    /* フォントサイズを小さく設定 */
+    color: #666;
+    /* 文字色を指定 */
+}
