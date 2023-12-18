@@ -8,7 +8,7 @@ interface VStackProps {
 
 const VStack: React.FC<VStackProps> = ({ children, style, gap = 0 }) => {
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: `${gap}px`, ...style }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: `${gap}px`, position: 'relative', ...style }}>
             {children}
         </div>
     )

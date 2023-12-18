@@ -8,7 +8,7 @@ interface HStackProps {
 
 const HStack: React.FC<HStackProps> = ({ children, style, gap = 0 }) => {
     return (
-        <div style={{ display: 'flex', flexDirection: 'row', gap: `${gap}px`, ...style }}>
+        <div style={{ display: 'flex', flexDirection: 'row', gap: `${gap}px`, position: 'relative', ...style }}>
             {children}
         </div>
     )
