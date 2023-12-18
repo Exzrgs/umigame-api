@@ -4,17 +4,19 @@ import (
 	"database/sql"
 	"errors"
 
+	"github.com/jmoiron/sqlx"
+
 	"umigame-api/models"
 	"umigame-api/myerrors"
 )
 
-func RegisterUser(db *sql.DB, auth *models.Auth) error {
+func RegisterUser(db *sql.DB, user *models.User) error {
 	const sqlStr = `
-	insert into users (email, password_hash, uuid, activate_flag, created_at) values 
+	insert into users (email, password_hash, uuid, activate_flag, created_at) values
 	(?, ?, ?, false, now());
 	`
 
-	if _, err := db.Exec(sqlStr, auth.Email, auth.Hash, auth.Uuid); err != nil {
+	if _, err := db.Exec(sqlStr, user.Email, user.PasswordHash, user.UUID); err != nil {
 		err = myerrors.InsertDataFailed.Wrap(err, "email is already used")
 		return err
 	}
@@ -47,24 +49,23 @@ func UpdateActivate(db *sql.DB, uuid string) error {
 	return nil
 }
 
-func GetAuthInfo(db *sql.DB, email string) (models.Auth, error) {
+func GetAuthInfo(db *sqlx.DB, email string) (models.User, error) {
 	const sqlStr = `
 	select password_hash, uuid, activate_flag from users
 	where email = ?;
 	`
 
-	var auth models.Auth
+	var user models.User
 
-	err := db.QueryRow(sqlStr, email).Scan(&auth.Hash, &auth.Uuid, &auth.ActivateFlag)
-	if err != nil {
+	if err := db.QueryRowx(sqlStr, email).StructScan(&user); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			err = myerrors.NoData.Wrap(err, "email is not registered")
-			return models.Auth{}, err
+			return models.User{}, err
 		} else {
 			err = myerrors.GetDataFailed.Wrap(err, "internal server error")
-			return models.Auth{}, err
+			return models.User{}, err
 		}
 	}
 
-	return auth, nil
+	return user, nil
 }

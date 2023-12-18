@@ -11,6 +11,8 @@ require (
 	golang.org/x/crypto v0.14.0
 )
 
+require github.com/jinzhu/copier v0.4.0 // indirect
+
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect

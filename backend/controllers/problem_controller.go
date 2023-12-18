@@ -18,13 +18,13 @@ import (
 // @Failure 400
 // @Router /problem/list [get]
 func (c *ProblemController) GetProblemListHandler(w http.ResponseWriter, req *http.Request) {
-	problem, err := c.service.GetProblemListService()
+	problems, err := c.service.GetProblemListService()
 	if err != nil {
 		myerrors.ErrorHandler(w, req, err)
 		return
 	}
 
-	json.NewEncoder(w).Encode(problemList)
+	json.NewEncoder(w).Encode(problems)
 }
 
 func (c *ProblemController) GetProblemDetailHandler(w http.ResponseWriter, req *http.Request) {

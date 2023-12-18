@@ -27,12 +27,10 @@ type ProblemDetail struct {
 	Author       string
 	Reference    string
 	ReferenceURL string
-	ChatList     []ChatBase
 	CreatedAt    time.Time
-}
 
-type ChatBase struct {
-	Question  string
-	Answer    string
-	CreatedAt time.Time
+	IsSolved bool
+	IsLiked  bool
+
+	ChatList []ChatBase
 }

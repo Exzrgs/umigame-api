@@ -4,6 +4,8 @@ import (
 	"umigame-api/models"
 	"umigame-api/myerrors"
 	"umigame-api/repositories"
+
+	"github.com/jinzhu/copier"
 )
 
 /*
@@ -20,45 +22,83 @@ func (s *Service) GetProblemListService(page int) (map[int]models.ProblemBase, e
 		return nil, err
 	}
 
-	problemIDs := make([]int, ProblemNumPerPage)
+	problemIDs := make([]int, repositories.ProblemNumPerPage)
 	for i, problem := range problemList {
 		problemIDs[i] = problem.ID
 	}
-	activityList, err := repositories.GetActivityList(s.db, userID, problemIDs)
+	activityList, err := repositories.SelectActivityList(s.db, s.userID, page, problemIDs)
 	if err != nil {
 		return nil, err
 	}
 
-	response := make(map[int]models.ProblemBase, ProblemNumPerPage)
+	response := make(map[int]models.ProblemBase, repositories.ProblemNumPerPage)
 	for _, problem := range problemList {
 		var problemBase models.ProblemBase
-		problemBase.Title, problemBase.Author, problemBase.Statement, problemBase.CreatedAt = problem.Title, problem.Author, problem.Statement, problem.CreatedAt
+		if err := copier.Copy(&problemBase, &problem); err != nil {
+			err = myerrors.TypeCastFailed.Wrap(err, "internal server error")
+			return nil, err
+		}
 		problemBase.IsSolved, problemBase.IsLiked = false, false
 		response[problem.ID] = problemBase
 	}
 	for _, activity := range activityList {
-		response[activity.ProblemID].IsSolved = activity.IsSolved
-		response[activity.ProblemID].IsLiked = activity.IsLiked
+		problemBase := response[activity.ProblemID]
+		problemBase.IsSolved = activity.IsSolved
+		problemBase.IsLiked = activity.IsLiked
 	}
 
 	return response, nil
 }
 
-func (s *Service) GetProblemDetailService(id int) (models.Problem, error) {
-	problem, err := repositories.SelectProblemDetail(s.db, id)
+func (s *Service) GetProblemDetailService(problemID int) (models.ProblemDetail, error) {
+	problem, err := repositories.SelectProblem(s.db, problemID)
 	if err != nil {
-		return models.Problem{}, err
+		return models.ProblemDetail{}, err
 	}
 
-	return problem, nil
+	activity, err := repositories.SelectActivity(s.db, s.userID, problemID)
+	if err != nil {
+		return models.ProblemDetail{}, err
+	}
+
+	chats, err := repositories.SelectChatDetail(s.db, s.userID, problemID)
+	if err != nil {
+		return models.ProblemDetail{}, err
+	}
+
+	var response models.ProblemDetail
+	if err := copier.Copy(&response, &problem); err != nil {
+		err = myerrors.TypeCastFailed.Wrap(err, "internal server error")
+		return models.ProblemDetail{}, err
+	}
+	if err := copier.Copy(&response, &activity); err != nil {
+		err = myerrors.TypeCastFailed.Wrap(err, "internal server error")
+		return models.ProblemDetail{}, err
+	}
+	for _, chat := range chats {
+		var chatBase models.ChatBase
+		if err := copier.Copy(&chatBase, &chat); err != nil {
+			err = myerrors.TypeCastFailed.Wrap(err, "internal server error")
+			return models.ProblemDetail{}, err
+		}
+		response.ChatList = append(response.ChatList, chatBase)
+	}
+
+	return response, nil
 }
 
 func (s *Service) PostProblemService(problem models.Problem) (models.Problem, error) {
-	// この変数名は要検討
 	newProblem, err := repositories.InsertProblem(s.db, problem)
 	if err != nil {
 		return models.Problem{}, err
 	}
 
-	return newProblem, nil
+	var response models.Problem
+
+	if err := copier.Copy(&response, &newProblem); err != nil {
+		err = myerrors.TypeCastFailed.Wrap(err, "internal server error")
+		return models.Problem{}, err
+	}
+
+	return response, nil
 }

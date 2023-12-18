@@ -7,7 +7,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func GetActivityList(db *sqlx.DB, userID int, page int, problemIDs []int) ([]models.Activity, error) {
+func SelectActivityList(db *sqlx.DB, userID int, page int, problemIDs []int) ([]models.Activity, error) {
 	sqlStr := `
 	SELECT problem_id, is_solved, is_liked
 	FROM activities
@@ -36,4 +36,18 @@ func GetActivityList(db *sqlx.DB, userID int, page int, problemIDs []int) ([]mod
 	return activities, nil
 }
 
-func GetActivity() {}
+func SelectActivity(db *sqlx.DB, userID int, problemID int) (models.Activity, error) {
+	sqlStr := `
+	SELECT is_solved, is_liked
+	FROM activities
+	WHERE user_id = ? AND problem_id = ?;
+	`
+
+	var activity models.Activity
+	if err := db.QueryRowx(sqlStr, userID, problemID).StructScan(&activity); err != nil {
+		err = myerrors.GetDataFailed.Wrap(err, "failed to get data")
+		return models.Activity{}, err
+	}
+
+	return activity, nil
+}

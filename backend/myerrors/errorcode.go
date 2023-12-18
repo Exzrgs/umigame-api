@@ -14,6 +14,7 @@ const (
 	EncryptFailed  ErrCode = "S001"
 	GenUUIDFailed  ErrCode = "S002"
 	SendMailFailed ErrCode = "S003"
+	TypeCastFailed ErrCode = "S004"
 
 	ReqDecodeFailed ErrCode = "R000"
 	BadParameter    ErrCode = "R001"
