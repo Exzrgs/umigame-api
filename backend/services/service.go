@@ -12,11 +12,11 @@ type ProblemServicer interface {
 	PostProblemService(problem models.Problem) (models.Problem, error)
 }
 
-// type AuthServicer interface {
-// 	RegisterUserService(auth models.Auth) error
-// 	MailCheckService(uuid string) error
-// 	LoginService(email string, password string) (string, error)
-// }
+type UserServicer interface {
+	RegisterUserService(auth models.User) error
+	MailCheckService(uuid string) error
+	LoginService(email string, password string) (string, error)
+}
 
 /*
 mainやroutersから情報が欲しいときに使う

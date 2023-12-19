@@ -20,13 +20,14 @@ type Problem struct {
 }
 
 type User struct {
-	ID           int
-	Name         string
-	Email        string
-	PasswordHash string
-	UUID         string
-	IsValid      bool
-	CreatedAt    time.Time
+	ID           int       `db:"id"`
+	Name         string    `json:"name" db:"name"`
+	Email        string    `json:"email" db:"email"`
+	Password     string    `json:"password"`
+	PasswordHash string    `db:"password_hash"`
+	UUID         string    `db:"uuid"`
+	IsValid      bool      `db:"is_valid"`
+	CreatedAt    time.Time `db:"created_at"`
 }
 
 type Activity struct {

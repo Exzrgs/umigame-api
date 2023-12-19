@@ -10,25 +10,28 @@ import (
 	"umigame-api/myerrors"
 )
 
-func RegisterUser(db *sql.DB, user *models.User) error {
+func RegisterUser(db *sqlx.DB, user *models.User) error {
 	const sqlStr = `
-	INSERT INTO users (email, password_hash, uuid, activate_flag, created_at) values
-	(?, ?, ?, false, now());
+	INSERT INTO users (name, email, password_hash, uuid, is_valid, created_at) VALUES
+	(?, ?, ?, ?, false, now());
 	`
 
-	if _, err := db.Exec(sqlStr, user.Email, user.PasswordHash, user.UUID); err != nil {
-		err = myerrors.InsertDataFailed.Wrap(err, "email is already used")
+	if _, err := db.Exec(sqlStr, user.Name, user.Email, user.PasswordHash, user.UUID); err != nil {
+		/*
+			TODO:emailが被ってるのか、普通にエラーなのかで分岐する
+		*/
+		err = myerrors.InsertDataFailed.Wrap(err, "internal server error")
 		return err
 	}
 
 	return nil
 }
 
-func UpdateActivate(db *sql.DB, uuid string) error {
+func UpdateActivate(db *sqlx.DB, uuid string) error {
 	const sqlStr = `
-	update users
-	set activate_flag = true
-	where uuid = ?;
+	UPDATE users
+	SET is_valid = TRUE
+	WHERE uuid = ?;
 	`
 
 	result, err := db.Exec(sqlStr, uuid)
@@ -51,12 +54,12 @@ func UpdateActivate(db *sql.DB, uuid string) error {
 
 func GetAuthInfo(db *sqlx.DB, email string) (models.User, error) {
 	const sqlStr = `
-	select password_hash, uuid, activate_flag from users
-	where email = ?;
+	SELECT password_hash, uuid, is_valid
+	FROM users
+	WHERE email = ?;
 	`
 
 	var user models.User
-
 	if err := db.QueryRowx(sqlStr, email).StructScan(&user); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			err = myerrors.NoData.Wrap(err, "email is not registered")

@@ -12,14 +12,14 @@ type ProblemController struct {
 	service services.ProblemServicer
 }
 
-// type AuthController struct {
-// 	service services.AuthServicer
-// }
+type UserController struct {
+	service services.UserServicer
+}
 
 func NewProblemController(s services.ProblemServicer) *ProblemController {
 	return &ProblemController{service: s}
 }
 
-// func NewAuthController(s services.AuthServicer) *AuthController {
-// 	return &AuthController{service: s}
-// }
+func NewUserController(s services.UserServicer) *UserController {
+	return &UserController{service: s}
+}
