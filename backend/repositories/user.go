@@ -12,7 +12,7 @@ import (
 
 func RegisterUser(db *sql.DB, user *models.User) error {
 	const sqlStr = `
-	insert into users (email, password_hash, uuid, activate_flag, created_at) values
+	INSERT INTO users (email, password_hash, uuid, activate_flag, created_at) values
 	(?, ?, ?, false, now());
 	`
 

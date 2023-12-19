@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"umigame-api/middlewares"
+	"umigame-api/utils"
 )
 
 func ErrorHandler(w http.ResponseWriter, req *http.Request, err error) {
@@ -19,7 +19,7 @@ func ErrorHandler(w http.ResponseWriter, req *http.Request, err error) {
 		}
 	}
 
-	traceID := middlewares.GetTraceID(req.Context())
+	traceID := utils.GetTraceID(req.Context())
 	log.Printf("[%d]error: %s\n", traceID, myErr)
 
 	var statusCode int
@@ -27,8 +27,10 @@ func ErrorHandler(w http.ResponseWriter, req *http.Request, err error) {
 	switch myErr.ErrCode {
 	case NoData:
 		statusCode = http.StatusNotFound
-	case ReqDecodeFailed, BadParameter:
+	case ReqDecodeFailed, BadParameter, BadCookie:
 		statusCode = http.StatusBadRequest
+	case InvalidPassword, InvalidUUID, NotActivate:
+		statusCode = http.StatusUnauthorized
 	default:
 		statusCode = http.StatusInternalServerError
 	}

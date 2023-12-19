@@ -34,3 +34,7 @@ func NewServicer(db *sqlx.DB, port string) *Service {
 		port: port,
 	}
 }
+
+func (s *Service) SetUserID(id int) {
+	s.userID = id
+}

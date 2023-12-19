@@ -19,7 +19,9 @@ const (
 	ReqDecodeFailed ErrCode = "R000"
 	BadParameter    ErrCode = "R001"
 	EmailInvalid    ErrCode = "R002"
+	BadCookie       ErrCode = "R002"
 
 	InvalidPassword ErrCode = "U000"
 	NotActivate     ErrCode = "U001"
+	InvalidUUID     ErrCode = "U002"
 )
