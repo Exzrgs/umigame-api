@@ -45,7 +45,7 @@ func UpdateActivate(db *sqlx.DB, uuid string) error {
 		return err
 	}
 	if num == 0 {
-		err = myerrors.NoData.Wrap(NotFound, "not found")
+		err = myerrors.NoData.Wrap(ErrNotFound, "not found")
 		return err
 	}
 
