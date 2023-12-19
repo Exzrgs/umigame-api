@@ -53,8 +53,14 @@ func SelectProblem(db *sqlx.DB, ID int) (models.Problem, error) {
 	`
 
 	var problem models.Problem
-	if err := db.QueryRowx(sqlStr, ID).StructScan(&problem); err != nil {
+	row := db.QueryRowx(sqlStr, ID)
+	if err := row.Err(); err != nil {
 		err = myerrors.GetDataFailed.Wrap(err, "failed to get data")
+		return models.Problem{}, err
+	}
+
+	if err := row.StructScan(&problem); err != nil {
+		err = myerrors.NoData.Wrap(err, "problem is not found")
 		return models.Problem{}, err
 	}
 
