@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gorilla/mux"
+
 	"umigame-api/models"
 	"umigame-api/myerrors"
 )
@@ -37,17 +39,11 @@ func (c *ProblemController) GetProblemListHandler(w http.ResponseWriter, req *ht
 }
 
 func (c *ProblemController) GetProblemDetailHandler(w http.ResponseWriter, req *http.Request) {
-	var id int
-	q := req.URL.Query()
-	idStr, ok := q["id"]
-	if ok && len(idStr) > 0 {
-		var err error
-		id, err = strconv.Atoi(idStr[0])
-		if err != nil {
-			err = myerrors.BadParameter.Wrap(err, "query parameter must be number")
-			myerrors.ErrorHandler(w, req, err)
-			return
-		}
+	id, err := strconv.Atoi(mux.Vars(req)["id"])
+	if err != nil {
+		err = myerrors.BadParameter.Wrap(err, "query parameter must be number")
+		myerrors.ErrorHandler(w, req, err)
+		return
 	}
 
 	problem, err := c.service.GetProblemDetailService(id)

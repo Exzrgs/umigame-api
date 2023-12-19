@@ -28,7 +28,7 @@ func NewRouter(db *sqlx.DB, port string) *mux.Router {
 	appRouter.Use(authMiddleware.Authorization)
 
 	appRouter.HandleFunc("/list", pc.GetProblemListHandler).Methods(http.MethodGet)
-	appRouter.HandleFunc("/detail", pc.GetProblemDetailHandler).Methods(http.MethodGet)
+	appRouter.HandleFunc("/{id:[0-9]+}", pc.GetProblemDetailHandler).Methods(http.MethodGet)
 	appRouter.HandleFunc("/add", pc.PostProblemHandler).Methods(http.MethodPost)
 
 	return r
