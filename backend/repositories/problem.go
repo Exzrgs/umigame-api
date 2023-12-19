@@ -63,8 +63,8 @@ func SelectProblem(db *sqlx.DB, ID int) (models.Problem, error) {
 
 func InsertProblem(db *sqlx.DB, problem models.Problem) (models.Problem, error) {
 	const sqlStr = `
-	insert into problems (title, problem_statement, answer, created_at) values
-	(?, ?, ?, now());
+	INSERT INTO problems (title, statement, answer, author, reference, reference_url, created_at) VALUES
+	(?, ?, ?, ?, ?, ?, now());
 	`
 
 	var newProblem models.Problem
@@ -73,7 +73,7 @@ func InsertProblem(db *sqlx.DB, problem models.Problem) (models.Problem, error) 
 		return models.Problem{}, err
 	}
 
-	result, err := db.Exec(sqlStr, problem.Title, problem.Statement, problem.Answer)
+	result, err := db.Exec(sqlStr, problem.Title, problem.Statement, problem.Answer, problem.Author, problem.Reference, problem.ReferenceURL)
 	if err != nil {
 		err = myerrors.InsertDataFailed.Wrap(err, "failed to insert data")
 		return models.Problem{}, err

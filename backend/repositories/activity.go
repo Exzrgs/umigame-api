@@ -43,10 +43,18 @@ func SelectActivity(db *sqlx.DB, userID int, problemID int) (models.Activity, er
 	WHERE user_id = ? AND problem_id = ?;
 	`
 
-	var activity models.Activity
-	if err := db.QueryRowx(sqlStr, userID, problemID).StructScan(&activity); err != nil {
+	rows, err := db.Queryx(sqlStr, userID, problemID)
+	if err != nil {
 		err = myerrors.GetDataFailed.Wrap(err, "failed to get data")
 		return models.Activity{}, err
+	}
+
+	var activity models.Activity
+	for rows.Next() {
+		if err := rows.StructScan(&activity); err != nil {
+			err = myerrors.GetDataFailed.Wrap(err, "failed to get data")
+			return models.Activity{}, err
+		}
 	}
 
 	return activity, nil

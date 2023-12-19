@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"flag"
 	"log"
 	"net/http"
@@ -21,7 +20,6 @@ func init() {
 }
 
 var (
-	db         *sql.DB
 	dbUser     string
 	dbPassword string
 	dbHost     string

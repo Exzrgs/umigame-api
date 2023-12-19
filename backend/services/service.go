@@ -7,8 +7,8 @@ import (
 )
 
 type ProblemServicer interface {
-	GetProblemListService(page int) ([]models.Problem, error)
-	GetProblemDetailService(id int) (models.Problem, error)
+	GetProblemListService(page int) ([]models.ProblemBase, error)
+	GetProblemDetailService(problemID int) (models.ProblemDetail, error)
 	PostProblemService(problem models.Problem) (models.Problem, error)
 }
 

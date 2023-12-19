@@ -9,14 +9,14 @@ Here is DB models
 */
 
 type Problem struct {
-	ID           int
-	Title        string
-	Statement    string
-	Answer       string
-	Author       string
-	Reference    string
-	ReferenceURL string
-	CreatedAt    time.Time
+	ID           int       `json:"id" db:"id"`
+	Title        string    `json:"title" db:"title"`
+	Statement    string    `json:"statement" db:"statement"`
+	Answer       string    `json:"answer" db:"answer"`
+	Author       string    `json:"author" db:"author"`
+	Reference    string    `json:"reference" db:"reference"`
+	ReferenceURL string    `json:"reference_url" db:"reference_url"`
+	CreatedAt    time.Time `json:"created_at" db:"created_at"`
 }
 
 type User struct {

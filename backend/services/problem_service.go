@@ -12,7 +12,7 @@ import (
 pageは必要
 アクティビティも取得
 */
-func (s *Service) GetProblemListService(page int) (map[int]models.ProblemBase, error) {
+func (s *Service) GetProblemListService(page int) ([]models.ProblemBase, error) {
 	problemList, err := repositories.SelectProblemList(s.db, page)
 	if err != nil {
 		return nil, err
@@ -31,7 +31,7 @@ func (s *Service) GetProblemListService(page int) (map[int]models.ProblemBase, e
 		return nil, err
 	}
 
-	response := make(map[int]models.ProblemBase, repositories.ProblemNumPerPage)
+	responseMap := make(map[int]models.ProblemBase, repositories.ProblemNumPerPage)
 	for _, problem := range problemList {
 		var problemBase models.ProblemBase
 		if err := copier.Copy(&problemBase, &problem); err != nil {
@@ -39,12 +39,17 @@ func (s *Service) GetProblemListService(page int) (map[int]models.ProblemBase, e
 			return nil, err
 		}
 		problemBase.IsSolved, problemBase.IsLiked = false, false
-		response[problem.ID] = problemBase
+		responseMap[problem.ID] = problemBase
 	}
 	for _, activity := range activityList {
-		problemBase := response[activity.ProblemID]
+		problemBase := responseMap[activity.ProblemID]
 		problemBase.IsSolved = activity.IsSolved
 		problemBase.IsLiked = activity.IsLiked
+	}
+
+	var response []models.ProblemBase
+	for _, v := range responseMap {
+		response = append(response, v)
 	}
 
 	return response, nil

@@ -8,6 +8,7 @@ import (
 GetProblemList : Response
 */
 type ProblemBase struct {
+	ID        int
 	Title     string
 	Author    string
 	Statement string

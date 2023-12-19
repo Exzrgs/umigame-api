@@ -9,16 +9,25 @@ import (
 	"umigame-api/myerrors"
 )
 
-// @Summary 問題リストの取得
-// @Description 問題リストの取得
-// @Accept json
-// @Produce json
-// @Security UUID
-// @Success 200
-// @Failure 400
-// @Router /problem/list [get]
 func (c *ProblemController) GetProblemListHandler(w http.ResponseWriter, req *http.Request) {
-	problems, err := c.service.GetProblemListService()
+	var page int
+	q := req.URL.Query()
+	p, ok := q["page"]
+	if ok && len(p) > 0 {
+		var err error
+		page, err = strconv.Atoi(p[0])
+		if err != nil {
+			err = myerrors.BadParameter.Wrap(err, "query parameter must be number")
+			myerrors.ErrorHandler(w, req, err)
+			return
+		}
+	} else {
+		err := myerrors.BadParameter.Wrap(NoQueryParameter, "must have page query parameter")
+		myerrors.ErrorHandler(w, req, err)
+		return
+	}
+
+	problems, err := c.service.GetProblemListService(page)
 	if err != nil {
 		myerrors.ErrorHandler(w, req, err)
 		return
@@ -50,6 +59,16 @@ func (c *ProblemController) GetProblemDetailHandler(w http.ResponseWriter, req *
 	json.NewEncoder(w).Encode(problem)
 }
 
+/*
+	{
+		"title": "test",
+		"statement": "test",
+		"answer": "test",
+		"author": "test",
+		"reference": "test",
+		"reference_url":"test"
+	}
+*/
 func (c *ProblemController) PostProblemHandler(w http.ResponseWriter, req *http.Request) {
 	var problem models.Problem
 	if err := json.NewDecoder(req.Body).Decode(&problem); err != nil {

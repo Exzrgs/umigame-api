@@ -3,10 +3,10 @@ package tasks
 import (
 	"time"
 
-	"database/sql"
+	"github.com/jmoiron/sqlx"
 )
 
-func ExeTasks(db *sql.DB) {
+func ExeTasks(db *sqlx.DB) {
 	go func() {
 		t := time.NewTicker(time.Minute)
 		for {
