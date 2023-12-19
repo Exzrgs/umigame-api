@@ -43,11 +43,13 @@ func (c *UserController) LoginHandler(w http.ResponseWriter, req *http.Request) 
 		return
 	}
 
-	uuid, err := c.service.LoginService(user.Email, user.Password)
+	uuid, cookie, err := c.service.LoginService(user.Email, user.Password)
 	if err != nil {
 		myerrors.ErrorHandler(w, req, err)
 		return
 	}
+
+	http.SetCookie(w, cookie)
 
 	json.NewEncoder(w).Encode(uuid)
 }

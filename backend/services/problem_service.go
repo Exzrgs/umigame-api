@@ -18,7 +18,7 @@ func (s *Service) GetProblemListService(page int) ([]models.ProblemBase, error) 
 		return nil, err
 	}
 	if len(problemList) == 0 {
-		err := myerrors.NoData.Wrap(NoData, "0 problem found")
+		err := myerrors.NoData.Wrap(ErrNoData, "0 problem found")
 		return nil, err
 	}
 

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"net/http"
 	"umigame-api/models"
 
 	"github.com/jmoiron/sqlx"
@@ -15,7 +16,7 @@ type ProblemServicer interface {
 type UserServicer interface {
 	RegisterUserService(auth models.User) error
 	MailCheckService(uuid string) error
-	LoginService(email string, password string) (models.User, error)
+	LoginService(email string, password string) (models.User, *http.Cookie, error)
 }
 
 /*

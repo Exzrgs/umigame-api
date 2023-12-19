@@ -1,6 +1,7 @@
 package services
 
 import (
+	"net/http"
 	"net/mail"
 	"os"
 
@@ -65,25 +66,31 @@ func (s *Service) MailCheckService(uuid string) error {
 	return nil
 }
 
-func (s *Service) LoginService(email string, password string) (models.User, error) {
+func (s *Service) LoginService(email string, password string) (models.User, *http.Cookie, error) {
 	user, err := repositories.GetAuthInfo(s.db, email)
 	if err != nil {
-		return models.User{}, err
+		return models.User{}, nil, err
 	}
 
 	if !user.IsValid {
-		err := myerrors.NotActivate.Wrap(NotActivate, "email is not valified")
-		return models.User{}, err
+		err := myerrors.NotActivate.Wrap(ErrNotValid, "email is not valified")
+		return models.User{}, nil, err
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password)); err != nil {
 		err = myerrors.InvalidPassword.Wrap(err, "password is not correnct")
-		return models.User{}, err
+		return models.User{}, nil, err
+	}
+
+	cookie := &http.Cookie{
+		Name:  "uuid",
+		Value: user.UUID,
+		Path:  "/",
 	}
 
 	response := models.User{
 		UUID: user.UUID,
 	}
 
-	return response, nil
+	return response, cookie, nil
 }
