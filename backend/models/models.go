@@ -5,43 +5,43 @@ import (
 )
 
 /*
-Here is DB models
+Here are DB models
 */
 
 type Problem struct {
-	ID           int       `json:"id" db:"id"`
-	Title        string    `json:"title" db:"title"`
-	Statement    string    `json:"statement" db:"statement"`
-	Answer       string    `json:"answer" db:"answer"`
-	Author       string    `json:"author" db:"author"`
-	Reference    string    `json:"reference" db:"reference"`
-	ReferenceURL string    `json:"reference_url" db:"reference_url"`
-	CreatedAt    time.Time `json:"created_at" db:"created_at"`
+	ID           int        `json:"id,omitempty" db:"id"`
+	Title        string     `json:"title,omitempty" db:"title"`
+	Statement    string     `json:"statement,omitempty" db:"statement"`
+	Answer       string     `json:"answer,omitempty" db:"answer"`
+	Author       string     `json:"author,omitempty" db:"author"`
+	Reference    string     `json:"reference,omitempty" db:"reference"`
+	ReferenceURL string     `json:"reference_url,omitempty" db:"reference_url"`
+	CreatedAt    *time.Time `json:"created_at,omitempty" db:"created_at"` // ポインタにするとnilになるからomitemptyが機能する
 }
 
 type User struct {
-	ID           int       `db:"id"`
-	Name         string    `json:"name" db:"name"`
-	Email        string    `json:"email" db:"email"`
-	Password     string    `json:"password"`
-	PasswordHash string    `db:"password_hash"`
-	UUID         string    `db:"uuid"`
-	IsValid      bool      `db:"is_valid"`
-	CreatedAt    time.Time `db:"created_at"`
+	ID           int        `json:"id,omitempty" db:"id"`
+	Name         string     `json:"name,omitempty" db:"name"`
+	Email        string     `json:"email,omitempty" db:"email"`
+	Password     string     `json:"password,omitempty"`
+	PasswordHash string     `json:"-" db:"password_hash"`
+	UUID         string     `json:"uuid,omitempty" db:"uuid"`
+	IsValid      bool       `json:"is_valid,omitempty" db:"is_valid"`
+	CreatedAt    *time.Time `json:"created_at,omitempty" db:"created_at"`
 }
 
 type Activity struct {
-	UserID    int  `db:"user_id"`
-	ProblemID int  `db:"problem_id"`
-	IsSolved  bool `db:"is_solved"`
-	IsLiked   bool `db:"is_liked"`
+	UserID    int  `json:"user_id,omitempty" db:"user_id"`
+	ProblemID int  `json:"problem_id,omitempty" db:"problem_id"`
+	IsSolved  bool `json:"is_solved,omitempty" db:"is_solved"`
+	IsLiked   bool `json:"is_liked,omitempty" db:"is_liked"`
 }
 
 type Chat struct {
-	ChatID    int
-	ProblemID int
-	UserID    int
-	Question  string
-	Answer    string
-	CreatedAt time.Time
+	ID        int        `db:"id"`
+	ProblemID int        `json:"problem_id,omitempty" db:"problem_id"`
+	UserID    int        `json:"user_id,omitempty" db:"user_id"`
+	Question  string     `json:"question,omitempty" db:"question"`
+	Answer    string     `json:"answer,omitempty" db:"answer"`
+	CreatedAt *time.Time `json:"created_at,omitempty" db:"created_at"`
 }

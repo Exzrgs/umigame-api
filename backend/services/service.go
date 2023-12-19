@@ -15,7 +15,7 @@ type ProblemServicer interface {
 type UserServicer interface {
 	RegisterUserService(auth models.User) error
 	MailCheckService(uuid string) error
-	LoginService(email string, password string) (string, error)
+	LoginService(email string, password string) (models.User, error)
 }
 
 /*

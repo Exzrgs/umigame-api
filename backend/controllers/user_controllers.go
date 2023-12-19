@@ -49,5 +49,5 @@ func (c *UserController) LoginHandler(w http.ResponseWriter, req *http.Request) 
 		return
 	}
 
-	json.NewEncoder(w).Encode(models.User{UUID: uuid})
+	json.NewEncoder(w).Encode(uuid)
 }

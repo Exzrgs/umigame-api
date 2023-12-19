@@ -8,7 +8,7 @@ type ChatBase struct {
 	CreatedAt time.Time
 }
 
-type ChatList struct {
+type ChatRoom struct {
 	ProblemID    int
 	ProblemTitle string
 	Question     string

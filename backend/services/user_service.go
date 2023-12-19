@@ -65,21 +65,25 @@ func (s *Service) MailCheckService(uuid string) error {
 	return nil
 }
 
-func (s *Service) LoginService(email string, password string) (string, error) {
+func (s *Service) LoginService(email string, password string) (models.User, error) {
 	user, err := repositories.GetAuthInfo(s.db, email)
 	if err != nil {
-		return "", err
+		return models.User{}, err
 	}
 
 	if !user.IsValid {
 		err := myerrors.NotActivate.Wrap(NotActivate, "email is not valified")
-		return "", err
+		return models.User{}, err
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password)); err != nil {
 		err = myerrors.InvalidPassword.Wrap(err, "password is not correnct")
-		return "", err
+		return models.User{}, err
 	}
 
-	return user.UUID, nil
+	response := models.User{
+		UUID: user.UUID,
+	}
+
+	return response, nil
 }
