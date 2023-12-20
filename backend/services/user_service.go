@@ -41,8 +41,8 @@ func (s *Service) RegisterUserService(user models.User) error {
 
 	mailMessage := utils.MailMessage(s.port, mailAuthUuid)
 	myMail := utils.Mail{
-		Host:     "smtp.gmail.com",
-		Port:     "587",
+		Host:     os.Getenv("SMTP_SERVER"),
+		Port:     os.Getenv("SMTP_PORT"),
 		From:     os.Getenv("EMAIL_ADDRESS"),
 		Password: os.Getenv("EMAIL_PASSWORD"),
 		To:       []string{user.Email},
