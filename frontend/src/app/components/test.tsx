@@ -9,7 +9,7 @@ import ScrollableContainer from './layouts/ScrollableContainer';
 import Link from 'next/link'
 import ProblemCardList from './lists/ProblemCardList';
 import Problem from '@/app/models/Problem';
-
+import TabBar from './elements/tabBar';
 const problems: Problem[] = [
     {
         id: 1, title: "カメオカメオカメオカメオ", statement: "カメオはカメオに殺された。そのカメオもまた、カメオに殺されてしまった。カメオはカメオになった。カメオは全てのカメオを殺した。どういう状況？",
@@ -48,8 +48,8 @@ export default function test() {
     return (
         <>
             <HStack style={{ height: '1080px', alignItems: 'flex-start' }}>
-                <Rectangle color={Color.White} width={80} height={1080}></Rectangle>
-                <Rectangle color={Color.Gray} width={80} height={1080}></Rectangle>
+                <TabBar></TabBar>
+                <Rectangle color={Color.Gray} width={160} height={1080}></Rectangle>
                 <ScrollableContainer maxHeight={1080} maxWidth={1840} style={{ width: '100%' }}>
                     <VStack>
                         <Rectangle color={Color.Gray} width={1920} height={64}></Rectangle>
