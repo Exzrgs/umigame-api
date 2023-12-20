@@ -1,7 +1,6 @@
 package routers
 
 import (
-	"database/sql"
 	"net/http"
 
 	"umigame-api/controllers"
@@ -9,23 +8,28 @@ import (
 	"umigame-api/services"
 
 	"github.com/gorilla/mux"
+	"github.com/jmoiron/sqlx"
 )
 
-func NewRouter(db *sql.DB, port string) *mux.Router {
+func NewRouter(db *sqlx.DB, port string) *mux.Router {
 	r := mux.NewRouter()
-
 	s := services.NewServicer(db, port)
-	c := controllers.NewController(s, db)
-
-	r.HandleFunc("/problem/list", c.GetProblemListHandler).Methods(http.MethodGet)
-	r.HandleFunc("/problem/detail", c.GetProblemDetailHandler).Methods(http.MethodGet)
-	r.HandleFunc("/problem/add", c.PostProblemHandler).Methods(http.MethodPost)
-	r.HandleFunc("/auth/register", c.RegisterUserHandler).Methods(http.MethodPost)
-	r.HandleFunc("/auth/login", c.LoginHandler).Methods(http.MethodPost)
-	r.HandleFunc("/auth/mail", c.MailCheckHandler).Methods(http.MethodGet)
-	// r.HandleFunc("/auth/cookie")
+	pc := controllers.NewProblemController(s)
+	ac := controllers.NewUserController(s)
+	authMiddleware := middlewares.NewAuthMiddlewarer(db, s)
 
 	r.Use(middlewares.Logging)
+
+	r.HandleFunc("/auth/register", ac.RegisterUserHandler).Methods(http.MethodPost)
+	r.HandleFunc("/auth/login", ac.LoginHandler).Methods(http.MethodPost)
+	r.HandleFunc("/auth/mail", ac.MailCheckHandler).Methods(http.MethodGet)
+
+	appRouter := r.PathPrefix("/problem").Subrouter()
+	appRouter.Use(authMiddleware.Authorization)
+
+	appRouter.HandleFunc("/list", pc.GetProblemListHandler).Methods(http.MethodGet)
+	appRouter.HandleFunc("/{id:[0-9]+}", pc.GetProblemDetailHandler).Methods(http.MethodGet)
+	appRouter.HandleFunc("/add", pc.PostProblemHandler).Methods(http.MethodPost)
 
 	return r
 }

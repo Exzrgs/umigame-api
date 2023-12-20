@@ -2,10 +2,12 @@ version: '3.9'
 
 services:
   db:
+    image: mysql:5.7
     container_name: umigame-db
-    build:
-      dockerfile: docker/db/Dockerfile
-      context: .
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --sql-mode=ONLY_FULL_GROUP_BY,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
     environment:
       MYSQL_ROOT_USER: ${ROOTUSER}
       MYSQL_ROOT_PASSWORD: ${ROOTPASS}
@@ -17,11 +19,11 @@ services:
       - "3306:3306"
     volumes:
       - type: volume
-        source: umigame-db-volume
+        source: umigame-db-test-volume
         target: /var/lib/mysql
       - type: bind
-        source: ./docker/db/init.sql
+        source: ./docker/db/testInit.sql
         target: /docker-entrypoint-initdb.d/init.sql
 
 volumes:
-  umigame-db-volume:
+  umigame-db-test-volume

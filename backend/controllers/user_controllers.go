@@ -8,15 +8,15 @@ import (
 	"umigame-api/myerrors"
 )
 
-func (c *Controller) RegisterUserHandler(w http.ResponseWriter, req *http.Request) {
-	var auth models.Auth
-	if err := json.NewDecoder(req.Body).Decode(&auth); err != nil {
+func (c *UserController) RegisterUserHandler(w http.ResponseWriter, req *http.Request) {
+	var user models.User
+	if err := json.NewDecoder(req.Body).Decode(&user); err != nil {
 		err = myerrors.ReqDecodeFailed.Wrap(err, "failed to decode json request body")
 		myerrors.ErrorHandler(w, req, err)
 		return
 	}
 
-	if err := c.service.RegisterUserService(auth); err != nil {
+	if err := c.service.RegisterUserService(user); err != nil {
 		myerrors.ErrorHandler(w, req, err)
 		return
 	}
@@ -24,7 +24,7 @@ func (c *Controller) RegisterUserHandler(w http.ResponseWriter, req *http.Reques
 	w.WriteHeader(http.StatusCreated)
 }
 
-func (c *Controller) MailCheckHandler(w http.ResponseWriter, req *http.Request) {
+func (c *UserController) MailCheckHandler(w http.ResponseWriter, req *http.Request) {
 	uuid := req.URL.Query().Get("uuid")
 
 	if err := c.service.MailCheckService(uuid); err != nil {
@@ -35,19 +35,21 @@ func (c *Controller) MailCheckHandler(w http.ResponseWriter, req *http.Request) 
 	w.WriteHeader(http.StatusNoContent)
 }
 
-func (c *Controller) LoginHandler(w http.ResponseWriter, req *http.Request) {
-	var auth models.Auth
-	if err := json.NewDecoder(req.Body).Decode(&auth); err != nil {
+func (c *UserController) LoginHandler(w http.ResponseWriter, req *http.Request) {
+	var user models.User
+	if err := json.NewDecoder(req.Body).Decode(&user); err != nil {
 		err = myerrors.ReqDecodeFailed.Wrap(err, "failed to decode json request body")
 		myerrors.ErrorHandler(w, req, err)
 		return
 	}
 
-	uuid, err := c.service.LoginService(auth.Email, auth.Password)
+	uuid, cookie, err := c.service.LoginService(user.Email, user.Password)
 	if err != nil {
 		myerrors.ErrorHandler(w, req, err)
 		return
 	}
 
-	json.NewEncoder(w).Encode(models.Uuid{Uuid: uuid})
+	http.SetCookie(w, cookie)
+
+	json.NewEncoder(w).Encode(uuid)
 }

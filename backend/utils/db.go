@@ -1,15 +1,14 @@
 package utils
 
 import (
-	"database/sql"
 	"fmt"
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 )
 
 var (
-	db         *sql.DB
 	dbUser     string
 	dbPassword string
 	dbHost     string
@@ -18,7 +17,7 @@ var (
 	dbConfig   string
 )
 
-func ConnectDB() (*sql.DB, error) {
+func ConnectDB() (*sqlx.DB, error) {
 	dbUser = os.Getenv("DB_USER")
 	dbPassword = os.Getenv("DB_PASSWORD")
 	dbHost = os.Getenv("DB_HOST")
@@ -26,7 +25,7 @@ func ConnectDB() (*sql.DB, error) {
 	dbDatabase = os.Getenv("DB_DATABASE")
 	dbConfig = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", dbUser, dbPassword, dbHost, dbPort, dbDatabase)
 
-	db, err := sql.Open("mysql", dbConfig)
+	db, err := sqlx.Open("mysql", dbConfig)
 	if err != nil {
 		return nil, err
 	}

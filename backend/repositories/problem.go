@@ -1,12 +1,12 @@
 package repositories
 
 import (
-	"database/sql"
-
 	"umigame-api/models"
 	"umigame-api/myerrors"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/copier"
+	"github.com/jmoiron/sqlx"
 )
 
 const (
@@ -14,19 +14,17 @@ const (
 		テストするときは、ここも変更する必要がある.
 		テストケースを増やしてこのままテストできるようにしたい
 	*/
-	ProblemNumPerPage = 2
+	ProblemNumPerPage = 20
 )
 
-// 1ページ何個取得するかを決めないといけない
-// 一旦20問
-func SelectProblemList(db *sql.DB, page int) ([]models.Problem, error) {
+func SelectProblemList(db *sqlx.DB, page int) ([]models.Problem, error) {
 	const sqlStr = `
-	select id, title, problem_statement, answer
-	from problems
-	limit ? offset ?;
+	SELECT id, title, author, statement, created_at
+	FROM problems
+	LIMIT ? OFFSET ?;
 	`
 
-	rows, err := db.Query(sqlStr, ProblemNumPerPage, (page-1)*ProblemNumPerPage)
+	rows, err := db.Queryx(sqlStr, ProblemNumPerPage, (page-1)*ProblemNumPerPage)
 	if err != nil {
 		err = myerrors.GetDataFailed.Wrap(err, "failed to get data")
 		return nil, err
@@ -37,8 +35,7 @@ func SelectProblemList(db *sql.DB, page int) ([]models.Problem, error) {
 
 	for rows.Next() {
 		var problem models.Problem
-		err := rows.Scan(&problem.ID, &problem.Title, &problem.ProblemStatement, &problem.Answer)
-		if err != nil {
+		if err := rows.StructScan(&problem); err != nil {
 			err = myerrors.GetDataFailed.Wrap(err, "failed to get data")
 			return nil, err
 		}
@@ -48,40 +45,41 @@ func SelectProblemList(db *sql.DB, page int) ([]models.Problem, error) {
 	return problemList, nil
 }
 
-func SelectProblemDetail(db *sql.DB, ID int) (models.Problem, error) {
-	const sqlStr = `
-	select id, title, problem_statement, answer
-	from problems
-	where id = ?;
+func SelectProblem(db *sqlx.DB, ID int) (models.Problem, error) {
+	sqlStr := `
+	SELECT title, statement, answer, author, reference, reference_url, created_at
+	FROM problems
+	WHERE id = ?;
 	`
 
 	var problem models.Problem
-
-	row := db.QueryRow(sqlStr, ID)
+	row := db.QueryRowx(sqlStr, ID)
 	if err := row.Err(); err != nil {
 		err = myerrors.GetDataFailed.Wrap(err, "failed to get data")
 		return models.Problem{}, err
 	}
 
-	err := row.Scan(&problem.ID, &problem.Title, &problem.ProblemStatement, &problem.Answer)
-	if err != nil {
-		err = myerrors.GetDataFailed.Wrap(err, "failed to get data")
+	if err := row.StructScan(&problem); err != nil {
+		err = myerrors.NoData.Wrap(err, "problem is not found")
 		return models.Problem{}, err
 	}
 
 	return problem, nil
 }
 
-func InsertProblem(db *sql.DB, problem models.Problem) (models.Problem, error) {
+func InsertProblem(db *sqlx.DB, problem models.Problem) (models.Problem, error) {
 	const sqlStr = `
-	insert into problems (title, problem_statement, answer, created_at) values
-	(?, ?, ?, now());
+	INSERT INTO problems (title, statement, answer, author, reference, reference_url, created_at) VALUES
+	(?, ?, ?, ?, ?, ?, now());
 	`
 
 	var newProblem models.Problem
-	newProblem.Title, newProblem.ProblemStatement, newProblem.Answer = problem.Title, problem.ProblemStatement, problem.Answer
+	if err := copier.Copy(&newProblem, &problem); err != nil {
+		err = myerrors.TypeCastFailed.Wrap(err, "internal server error")
+		return models.Problem{}, err
+	}
 
-	result, err := db.Exec(sqlStr, problem.Title, problem.ProblemStatement, problem.Answer)
+	result, err := db.Exec(sqlStr, problem.Title, problem.Statement, problem.Answer, problem.Author, problem.Reference, problem.ReferenceURL)
 	if err != nil {
 		err = myerrors.InsertDataFailed.Wrap(err, "failed to insert data")
 		return models.Problem{}, err

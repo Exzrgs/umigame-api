@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"flag"
 	"log"
 	"net/http"
@@ -21,7 +20,6 @@ func init() {
 }
 
 var (
-	db         *sql.DB
 	dbUser     string
 	dbPassword string
 	dbHost     string
@@ -30,7 +28,6 @@ var (
 	dbConfig   string
 )
 
-// a
 func main() {
 	port := flag.String("p", ":8080", "HTTP network port")
 	flag.Parse()
