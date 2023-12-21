@@ -1,12 +1,11 @@
 interface Problem {
-    id: number
-    title: string
-    statement: string
-    answer: string
-    author: string
-    reference: string
-    referenceURL: string
-    createdAt: Date
+    id?: number
+    title?: string
+    author?: string
+    statement?: string
+    isSolved?: boolean
+    isLiked?: boolean
+    createdAt?: Date
 }
 
 export default Problem
