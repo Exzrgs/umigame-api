@@ -27,6 +27,22 @@ var (
 	dbDatabase string
 	dbConfig   string
 )
+func enableCors(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        // ここにCORS設定を記述
+        w.Header().Set("Access-Control-Allow-Origin", "*")
+        w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+        w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, Authorization,X-CSRF-Token")
+
+        // OPTIONSメソッドに対するプリフライトリクエストへの対応
+        if r.Method == "OPTIONS" {
+            w.WriteHeader(http.StatusOK)
+            return
+        }
+
+        next.ServeHTTP(w, r)
+    })
+}
 
 func main() {
 	port := flag.String("p", ":8080", "HTTP network port")
@@ -39,9 +55,10 @@ func main() {
 	}
 
 	r := routers.NewRouter(db, *port)
-
+	wrappedHandler := enableCors(r)
+    http.Handle("/", wrappedHandler)
 	go tasks.ExeTasks(db)
 
 	log.Printf("server start at port %s", *port)
-	log.Fatal(http.ListenAndServe(*port, r))
+	log.Fatal(http.ListenAndServe(*port, wrappedHandler))
 }
