@@ -1,7 +1,7 @@
 import React from 'react';
 import ProblemCard from '../elements/ProblemCard'
 import Link from "next/link"
-import Problem from '@/app/models/Problem';
+import Problem from '@/app/models/Problem/Problem';
 
 interface ProblemListProps {
     problems: Problem[]
