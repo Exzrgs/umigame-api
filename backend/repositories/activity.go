@@ -64,3 +64,21 @@ func SelectActivity(db *sqlx.DB, userID int, problemID int) (models.Activity, er
 
 	return activity, nil
 }
+
+func ChangeLiked(db *sqlx.DB, userID int, activity models.Activity) error {
+	sqlStr := `
+	INSERT INTO activities (problem_id, user_id, is_liked)
+	VALUES (?, ?, ?)
+	ON DUPLICATE KEY UPDATE is_liked = ?;
+	`
+
+	_, err := db.Exec(sqlStr, activity.ProblemID, userID, !activity.IsLiked, !activity.IsLiked)
+	if err != nil {
+		err = myerrors.InsertDataFailed.Wrap(err, "failed to insert data")
+		return err
+	}
+
+	return nil
+}
+
+func ChangeSolved() {}

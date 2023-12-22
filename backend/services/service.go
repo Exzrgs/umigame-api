@@ -14,9 +14,13 @@ type ProblemServicer interface {
 }
 
 type UserServicer interface {
-	RegisterUserService(auth models.User) error
+	RegisterUserService(user models.User) error
 	MailCheckService(uuid string) error
 	LoginService(email string, password string) (models.User, *http.Cookie, error)
+}
+
+type ActivityServicer interface {
+	ChangeLikedService(activity models.Activity) (models.ActivityLiked, error)
 }
 
 /*

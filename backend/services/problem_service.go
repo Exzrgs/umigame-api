@@ -8,10 +8,6 @@ import (
 	"github.com/jinzhu/copier"
 )
 
-/*
-pageは必要
-アクティビティも取得
-*/
 func (s *Service) GetProblemListService(page int) ([]models.ProblemBase, error) {
 	problemList, err := repositories.SelectProblemList(s.db, page)
 	if err != nil {
@@ -53,6 +49,9 @@ func (s *Service) GetProblemListService(page int) ([]models.ProblemBase, error) 
 	return response, nil
 }
 
+/*
+TODO:IDも返すようにする
+*/
 func (s *Service) GetProblemDetailService(problemID int) (models.ProblemDetail, error) {
 	problem, err := repositories.SelectProblem(s.db, problemID)
 	if err != nil {
