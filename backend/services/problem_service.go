@@ -31,8 +31,6 @@ func (s *Service) GetProblemListService(page int) ([]models.ProblemBase, error) 
 		return nil, err
 	}
 
-	// responseにproblemをコピーして、idとindexを結び付ける。こうすると順序は保たれそう。Mapに変換しないようにする
-
 	response := make([]models.ProblemBase, 0)
 	idIndex := make(map[int]int, repositories.ProblemNumPerPage)
 	for i, problem := range problemList {
