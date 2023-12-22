@@ -21,6 +21,7 @@ func SelectProblemList(db *sqlx.DB, page int) ([]models.Problem, error) {
 	const sqlStr = `
 	SELECT id, title, author, statement, created_at
 	FROM problems
+	ORDER BY id
 	LIMIT ? OFFSET ?;
 	`
 

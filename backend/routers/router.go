@@ -16,7 +16,7 @@ func NewRouter(db *sqlx.DB, port string) *mux.Router {
 	s := services.NewServicer(db, port)
 	pc := controllers.NewProblemController(s)
 	ac := controllers.NewUserController(s)
-	authMiddleware := middlewares.NewAuthMiddlewarer(db, s)
+	// authMiddleware := middlewares.NewAuthMiddlewarer(db, s)
 
 	r.Use(middlewares.Logging)
 
@@ -25,7 +25,7 @@ func NewRouter(db *sqlx.DB, port string) *mux.Router {
 	r.HandleFunc("/auth/mail", ac.MailCheckHandler).Methods(http.MethodGet)
 
 	appRouter := r.PathPrefix("/problem").Subrouter()
-	appRouter.Use(authMiddleware.Authorization)
+	// appRouter.Use(authMiddleware.Authorization)
 
 	appRouter.HandleFunc("/list", pc.GetProblemListHandler).Methods(http.MethodGet)
 	appRouter.HandleFunc("/{id:[0-9]+}", pc.GetProblemDetailHandler).Methods(http.MethodGet)

@@ -35,6 +35,7 @@ func (c *ProblemController) GetProblemListHandler(w http.ResponseWriter, req *ht
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	json.NewEncoder(w).Encode(problems)
 }
 

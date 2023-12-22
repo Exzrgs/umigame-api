@@ -7,7 +7,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func SelectChatDetail(db *sqlx.DB, userID int, problemID int) ([]models.Chat, error) {
+func SelectProblemChat(db *sqlx.DB, userID int, problemID int) ([]models.Chat, error) {
 	sqlStr := `
 	SELECT question, answer, created_at
 	FROM chats
