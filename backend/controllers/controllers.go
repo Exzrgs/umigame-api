@@ -20,6 +20,10 @@ type ActivityController struct {
 	service services.ActivityServicer
 }
 
+type ChatController struct {
+	service services.ChatServicer
+}
+
 func NewProblemController(s services.ProblemServicer) *ProblemController {
 	return &ProblemController{service: s}
 }
@@ -30,4 +34,8 @@ func NewUserController(s services.UserServicer) *UserController {
 
 func NewActivityController(s services.ActivityServicer) *ActivityController {
 	return &ActivityController{service: s}
+}
+
+func NewChatController(s services.ChatServicer) *ChatController {
+	return &ChatController{service: s}
 }

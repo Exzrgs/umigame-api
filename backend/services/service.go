@@ -23,6 +23,10 @@ type ActivityServicer interface {
 	ChangeLikedService(activity models.Activity) (models.ActivityLiked, error)
 }
 
+type ChatServicer interface {
+	GetChatroomListService() ([]models.Chatroom, error)
+}
+
 /*
 mainやroutersから情報が欲しいときに使う
 それ以外からは引数で受け取る

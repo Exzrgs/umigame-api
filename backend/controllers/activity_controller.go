@@ -25,5 +25,3 @@ func (c *ActivityController) ChangeLikedHandler(w http.ResponseWriter, req *http
 
 	json.NewEncoder(w).Encode(newActivity)
 }
-
-func ChangeSolvedHandler() {}
