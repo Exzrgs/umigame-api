@@ -16,6 +16,7 @@ const (
 	SendMailFailed   ErrCode = "S003"
 	TypeCastFailed   ErrCode = "S004"
 	SQLPrepareFailed ErrCode = "S005"
+	GenCookieFailed  ErrCode = "S006"
 
 	ReqDecodeFailed ErrCode = "R000"
 	BadParameter    ErrCode = "R001"

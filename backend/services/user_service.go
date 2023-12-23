@@ -82,10 +82,10 @@ func (s *Service) LoginService(email string, password string) (models.User, *htt
 		return models.User{}, nil, err
 	}
 
-	cookie := &http.Cookie{
-		Name:  "uuid",
-		Value: user.UUID,
-		Path:  "/",
+	cookie, err := utils.GetCookie(user.UUID)
+	if err != nil {
+		err = myerrors.GenCookieFailed.Wrap(ErrNoData, "internal server error")
+		return models.User{}, nil, err
 	}
 
 	response := models.User{
