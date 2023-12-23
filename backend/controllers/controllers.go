@@ -16,10 +16,26 @@ type UserController struct {
 	service services.UserServicer
 }
 
+type ActivityController struct {
+	service services.ActivityServicer
+}
+
+type ChatController struct {
+	service services.ChatServicer
+}
+
 func NewProblemController(s services.ProblemServicer) *ProblemController {
 	return &ProblemController{service: s}
 }
 
 func NewUserController(s services.UserServicer) *UserController {
 	return &UserController{service: s}
+}
+
+func NewActivityController(s services.ActivityServicer) *ActivityController {
+	return &ActivityController{service: s}
+}
+
+func NewChatController(s services.ChatServicer) *ChatController {
+	return &ChatController{service: s}
 }

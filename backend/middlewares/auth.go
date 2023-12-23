@@ -5,19 +5,20 @@ import (
 
 	"umigame-api/myerrors"
 	"umigame-api/services"
+	"umigame-api/utils"
 
 	"github.com/jmoiron/sqlx"
 )
 
 type Auth struct {
-	db       *sqlx.DB
-	servicer *services.Service
+	db      *sqlx.DB
+	service *services.Service
 }
 
-func NewAuthMiddlewarer(db *sqlx.DB, servicer *services.Service) *Auth {
+func NewAuthMiddlewarer(db *sqlx.DB, service *services.Service) *Auth {
 	return &Auth{
-		db:       db,
-		servicer: servicer,
+		db:      db,
+		service: service,
 	}
 }
 
@@ -37,7 +38,15 @@ func (a *Auth) Authorization(next http.Handler) http.Handler {
 			return
 		}
 
-		a.servicer.SetUserID(userID)
+		a.service.SetUserID(userID)
+
+		cookie, err := utils.GetCookie(uuid.Value)
+		if err != nil {
+			myerrors.GenCookieFailed.Wrap(ErrNoData, "internal server error")
+			myerrors.ErrorHandler(w, req, err)
+		}
+
+		http.SetCookie(w, cookie)
 
 		next.ServeHTTP(w, req)
 	})

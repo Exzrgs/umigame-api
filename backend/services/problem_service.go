@@ -8,10 +8,6 @@ import (
 	"github.com/jinzhu/copier"
 )
 
-/*
-pageは必要
-アクティビティも取得
-*/
 func (s *Service) GetProblemListService(page int) ([]models.ProblemBase, error) {
 	problemList, err := repositories.SelectProblemList(s.db, page)
 	if err != nil {
@@ -31,30 +27,31 @@ func (s *Service) GetProblemListService(page int) ([]models.ProblemBase, error) 
 		return nil, err
 	}
 
-	responseMap := make(map[int]models.ProblemBase, repositories.ProblemNumPerPage)
-	for _, problem := range problemList {
+	response := make([]models.ProblemBase, 0)
+	idIndex := make(map[int]int, repositories.ProblemNumPerPage)
+	for i, problem := range problemList {
 		var problemBase models.ProblemBase
 		if err := copier.Copy(&problemBase, &problem); err != nil {
 			err = myerrors.TypeCastFailed.Wrap(err, "internal server error")
 			return nil, err
 		}
 		problemBase.IsSolved, problemBase.IsLiked = false, false
-		responseMap[problem.ID] = problemBase
+		response = append(response, problemBase)
+
+		idIndex[problem.ID] = i
 	}
 	for _, activity := range activityList {
-		problemBase := responseMap[activity.ProblemID]
+		problemBase := &response[idIndex[activity.ProblemID]]
 		problemBase.IsSolved = activity.IsSolved
 		problemBase.IsLiked = activity.IsLiked
-	}
-
-	var response []models.ProblemBase
-	for _, v := range responseMap {
-		response = append(response, v)
 	}
 
 	return response, nil
 }
 
+/*
+TODO:IDも返すようにする
+*/
 func (s *Service) GetProblemDetailService(problemID int) (models.ProblemDetail, error) {
 	problem, err := repositories.SelectProblem(s.db, problemID)
 	if err != nil {
@@ -66,7 +63,7 @@ func (s *Service) GetProblemDetailService(problemID int) (models.ProblemDetail, 
 		return models.ProblemDetail{}, err
 	}
 
-	chats, err := repositories.SelectChatDetail(s.db, s.userID, problemID)
+	chats, err := repositories.SelectProblemChat(s.db, s.userID, problemID)
 	if err != nil {
 		return models.ProblemDetail{}, err
 	}

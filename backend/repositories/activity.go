@@ -15,6 +15,10 @@ func SelectActivityList(db *sqlx.DB, userID int, page int, problemIDs []int) ([]
 	`
 
 	sqlStr, params, err := sqlx.In(sqlStr, userID, problemIDs)
+	if err != nil {
+		myerrors.SQLPrepareFailed.Wrap(err, "internal server error")
+		return nil, err
+	}
 
 	var activities []models.Activity
 	rows, err := db.Queryx(sqlStr, params...)
@@ -22,7 +26,7 @@ func SelectActivityList(db *sqlx.DB, userID int, page int, problemIDs []int) ([]
 		err = myerrors.GetDataFailed.Wrap(err, "failed to get data")
 		return nil, err
 	}
-	rows.Close()
+	defer rows.Close()
 
 	for rows.Next() {
 		var activity models.Activity
@@ -48,6 +52,7 @@ func SelectActivity(db *sqlx.DB, userID int, problemID int) (models.Activity, er
 		err = myerrors.GetDataFailed.Wrap(err, "failed to get data")
 		return models.Activity{}, err
 	}
+	defer rows.Close()
 
 	var activity models.Activity
 	for rows.Next() {
@@ -59,3 +64,21 @@ func SelectActivity(db *sqlx.DB, userID int, problemID int) (models.Activity, er
 
 	return activity, nil
 }
+
+func ChangeLiked(db *sqlx.DB, userID int, activity models.Activity) error {
+	sqlStr := `
+	INSERT INTO activities (problem_id, user_id, is_liked)
+	VALUES (?, ?, ?)
+	ON DUPLICATE KEY UPDATE is_liked = ?;
+	`
+
+	_, err := db.Exec(sqlStr, activity.ProblemID, userID, !activity.IsLiked, !activity.IsLiked)
+	if err != nil {
+		err = myerrors.InsertDataFailed.Wrap(err, "failed to insert data")
+		return err
+	}
+
+	return nil
+}
+
+func ChangeSolved() {}
