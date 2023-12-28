@@ -46,7 +46,7 @@ func SelectProblemList(db *sqlx.DB, page int) ([]models.Problem, error) {
 	return problemList, nil
 }
 
-func SelectProblem(db *sqlx.DB, ID int) (models.Problem, error) {
+func SelectProblem(db *sqlx.DB, id int) (models.Problem, error) {
 	sqlStr := `
 	SELECT title, statement, answer, author, reference, reference_url, created_at
 	FROM problems
@@ -54,7 +54,7 @@ func SelectProblem(db *sqlx.DB, ID int) (models.Problem, error) {
 	`
 
 	var problem models.Problem
-	row := db.QueryRowx(sqlStr, ID)
+	row := db.QueryRowx(sqlStr, id)
 	if err := row.Err(); err != nil {
 		err = myerrors.GetDataFailed.Wrap(err, "failed to get data")
 		return models.Problem{}, err
@@ -90,4 +90,26 @@ func InsertProblem(db *sqlx.DB, problem models.Problem) (models.Problem, error) 
 	newProblem.ID = int(id)
 
 	return newProblem, nil
+}
+
+func SelectProblemBase(db *sqlx.DB, id int) (models.Problem, error) {
+	sqlStr := `
+	SELECT statement, answer
+	FROM problems
+	WHERE id = ?;
+	`
+
+	var problem models.Problem
+	row := db.QueryRowx(sqlStr, id)
+	if err := row.Err(); err != nil {
+		err = myerrors.GetDataFailed.Wrap(err, "failed to get data")
+		return models.Problem{}, err
+	}
+
+	if err := row.StructScan(&problem); err != nil {
+		err = myerrors.NoData.Wrap(err, "problem is not found")
+		return models.Problem{}, err
+	}
+
+	return problem, nil
 }

@@ -76,7 +76,6 @@ func (c *ProblemController) PostProblemHandler(w http.ResponseWriter, req *http.
 	newProblem, err := c.service.PostProblemService(problem)
 	if err != nil {
 		myerrors.ErrorHandler(w, req, err)
-		return
 	}
 
 	json.NewEncoder(w).Encode(newProblem)

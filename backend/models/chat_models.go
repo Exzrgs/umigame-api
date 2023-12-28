@@ -3,9 +3,9 @@ package models
 import "time"
 
 type ChatBase struct {
-	Question  string
-	Answer    string
-	CreatedAt time.Time
+	Question  string    `json:"question" db:"question"`
+	Answer    string    `json:"answer" db:"answer"`
+	CreatedAt time.Time `json:"created_at" db:"created_at"`
 }
 
 type Chatroom struct {

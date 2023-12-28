@@ -39,6 +39,7 @@ func NewRouter(db *sqlx.DB, port string) *mux.Router {
 	chatRouter.Use(authMiddleware.Authorization)
 
 	chatRouter.HandleFunc("/room/list", cc.GetChatroomListHandler).Methods(http.MethodGet)
+	chatRouter.HandleFunc("/question", cc.PostQuestionHandler).Methods(http.MethodPost)
 	// chatRouter.HandleFunc("/room/delete").Methods(http.MethodDelete)
 
 	return r
