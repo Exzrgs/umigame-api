@@ -25,6 +25,7 @@ type ActivityServicer interface {
 
 type ChatServicer interface {
 	GetChatroomListService() ([]models.Chatroom, error)
+	PostQuestionService(chat models.Chat) (models.Chat, error)
 }
 
 /*

@@ -38,10 +38,10 @@ type Activity struct {
 }
 
 type Chat struct {
-	ID        int        `db:"id"`
+	ID        int        `json:"id,omitempty" db:"id"`
 	ProblemID int        `json:"problem_id,omitempty" db:"problem_id"`
 	UserID    int        `json:"user_id,omitempty" db:"user_id"`
 	Question  string     `json:"question,omitempty" db:"question"`
-	Answer    string     `json:"answer,omitempty" db:"answer"`
+	Answer    *int       `json:"answer,omitempty" db:"answer"`
 	CreatedAt *time.Time `json:"created_at,omitempty" db:"created_at"`
 }

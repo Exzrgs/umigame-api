@@ -93,3 +93,17 @@ func SelectChatroomList(db *sqlx.DB, userID int) ([]models.Chatroom, error) {
 
 	return chatroomList, nil
 }
+
+func InsertChat(db *sqlx.DB, chat models.Chat) error {
+	sqlStr := `
+	INSERT INTO chats (problem_id, user_id, question, answer, created_at) VALUES
+	(?, ?, ?, ?, NOW());
+	`
+
+	if _, err := db.Exec(sqlStr, chat.ProblemID, chat.UserID, chat.Question, chat.Answer); err != nil {
+		err = myerrors.InsertDataFailed.Wrap(err, "failed to insert data")
+		return err
+	}
+
+	return nil
+}
