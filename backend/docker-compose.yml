@@ -6,12 +6,16 @@ services:
     build:
       dockerfile: docker/db/Dockerfile
       context: .
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "$MYSQL_ROOTUSER", "-p$MYSQL_ROOTPASS"]
+      interval: 3s
+      retries: 2
     environment:
-      MYSQL_ROOT_USER: ${ROOTUSER}
-      MYSQL_ROOT_PASSWORD: ${ROOTPASS}
-      MYSQL_DATABASE: ${DATABASE}
-      MYSQL_USER: ${USERNAME}
-      MYSQL_PASSWORD: ${USERPASS}
+      MYSQL_ROOT_USER: ${MYSQL_ROOTUSER}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOTPASS}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_USERPASS}
       TZ: 'Asia/Tokyo'
     ports:
       - "3306:3306"
@@ -27,7 +31,7 @@ services:
     container_name: umigame-api
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
     build:
       dockerfile: docker/api/Dockerfile
       context: .
@@ -45,6 +49,10 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
     ports:
       - "8080:8080"
+    volumes:
+      - type: bind
+        source: .
+        target: /app
 
 volumes:
   umigame-db-volume:
