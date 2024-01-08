@@ -15,6 +15,7 @@ func (c *ActivityController) ChangeLikedHandler(w http.ResponseWriter, req *http
 	if err := json.NewDecoder(req.Body).Decode(&activity); err != nil {
 		err = myerrors.ReqDecodeFailed.Wrap(err, "failed to decode json request body")
 		myerrors.ErrorHandler(w, req, err)
+		return
 	}
 
 	newActivity, err := c.service.ChangeLikedService(activity)

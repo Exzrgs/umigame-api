@@ -71,11 +71,13 @@ func (c *ProblemController) PostProblemHandler(w http.ResponseWriter, req *http.
 	if err := json.NewDecoder(req.Body).Decode(&problem); err != nil {
 		err = myerrors.ReqDecodeFailed.Wrap(err, "failed to decode json request body")
 		myerrors.ErrorHandler(w, req, err)
+		return
 	}
 
 	newProblem, err := c.service.PostProblemService(problem)
 	if err != nil {
 		myerrors.ErrorHandler(w, req, err)
+		return
 	}
 
 	json.NewEncoder(w).Encode(newProblem)

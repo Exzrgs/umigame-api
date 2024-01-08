@@ -44,6 +44,7 @@ func (a *Auth) Authorization(next http.Handler) http.Handler {
 		if err != nil {
 			myerrors.GenCookieFailed.Wrap(ErrNoData, "internal server error")
 			myerrors.ErrorHandler(w, req, err)
+			return
 		}
 
 		http.SetCookie(w, cookie)
