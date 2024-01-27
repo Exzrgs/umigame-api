@@ -1,103 +1,264 @@
-swagger: "2.0"
+openapi: 3.0.1
 info:
-  version: 1.0.0
-  title: Swagger Petstore
-  license:
-    name: MIT
-host: petstore.swagger.io
-basePath: /v1
-schemes:
-  - http
-consumes:
-  - application/json
-produces:
-  - application/json
+  title: Swagger Petstore - OpenAPI 3.0
+  description: 
+    ウミガメプロジェクトのAPI
+  version: 1.0.11
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: problem
+  - name: auth
+  - name: chat
 paths:
-  /pets:
+  /problem/list:
     get:
-      summary: List all pets
-      operationId: listPets
       tags:
-        - pets
-      parameters:
-        - name: limit
-          in: query
-          description: How many items to return at one time (max 100)
-          required: false
-          type: integer
-          format: int32
+        - problem
+      summary:  get problem list
+      description: get problem list
       responses:
-        "200":
-          description: A paged array of pets
-          headers:
-            x-next:
-              type: string
-              description: A link to the next page of responses
-          schema:
-            $ref: '#/definitions/Pets'
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-    post:
-      summary: Create a pet
-      operationId: createPets
-      tags:
-        - pets
-      responses:
-        "201":
-          description: Null response
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /pets/{petId}:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProblemBase"
+
+  /problem/{id}:
     get:
-      summary: Info for a specific pet
-      operationId: showPetById
       tags:
-        - pets
+        - problem
+      summary: get problem detail
       parameters:
-        - name: petId
+        - name: id
           in: path
+          schema:
+            type: integer
           required: true
-          description: The id of the pet to retrieve
-          type: string
+          description: problem id
+      description: get problem detail
       responses:
-        "200":
-          description: Expected response to a valid request
-          schema:
-            $ref: '#/definitions/Pets'
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-definitions:
-  Pet:
-    type: "object"
-    required:
-      - id
-      - name
-    properties:
-      id:
-        type: integer
-        format: int64
-      name:
-        type: string
-      tag:
-        type: string
-  Pets:
-    type: array
-    items:
-      $ref: '#/definitions/Pet'
-  Error:
-    type: "object"
-    required:
-      - code
-      - message
-    properties:
-      code:
-        type: integer
-        format: int32
-      message:
-        type: string
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+
+  /problem/add:
+    post:
+      tags:
+        - problem
+      summary: add problem
+      description: add problem
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemPost"
+                
+  /problem/like:
+    post:
+      tags:
+        - problem
+      summary: like problem
+      description: like problem
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemLike"
+                
+  /auth/register:
+    post:
+      tags:
+        - auth
+      summary: like problem
+      description: like problem
+      requestBody:
+        content:
+          application/json:
+            schema: # POSTするオブジェクト
+              $ref: '#/components/schemas/AuthUser'
+      responses:
+        '201':
+          description: Successful operation
+                  
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: like problem
+      description: like problem
+      requestBody:
+        content:
+          application/json:
+            schema: # POSTするオブジェクト
+              $ref: '#/components/schemas/AuthUser'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResOK"
+                
+  /chat/room/list:
+    post:
+      tags:
+        - chat
+      summary: like problem
+      description: like problem
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChatRoom"
+                
+  /chat/question:
+    post:
+      tags:
+        - chat
+      summary: like problem
+      description: like problem
+      responses:
+        '200':
+          description: 1はyes, 0はno, 2はunknown
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  answer:
+                    type: "integer"
+                    example: "1"
+                  
+components:
+  schemas:
+    ProblemDetail:
+      type: object
+      properties:
+        id:
+          type: "number"
+          example: 1
+        title:
+          type: "string"
+          example: "雑誌の付録"
+        author:
+          type: "string"
+          example: "yan"
+        statement:
+          type: "string"
+          example: "その雑誌は、今月は特別付録つきだった。Ａさんは、今までその雑誌を買ったことはなかったが、付録がついているのを見て、その日初めて買って帰った。しかし、Ａさんはその付録を一度も使うことがなかった。なぜだろう？"
+        is_solved:
+          type: "boolean"
+          example: "true"
+        is_liked:
+          type: "boolean"
+          example: "true"
+        created_at:
+          type: "string"
+          example: "2024-01-12T17:21:10Z"
+          
+    ProblemBase:
+      type: object
+      properties:
+        id:
+          type: "number"
+          example: 1
+        title:
+          type: "string"
+          example: "雑誌の付録"
+        author:
+          type: "string"
+          example: "yan"
+        statement:
+          type: "string"
+          example: "その雑誌は、今月は特別付録つきだった。Ａさんは、今までその雑誌を買ったことはなかったが、付録がついているのを見て、その日初めて買って帰った。しかし、Ａさんはその付録を一度も使うことがなかった。なぜだろう？"
+        is_solved:
+          type: "boolean"
+          example: "true"
+        is_liked:
+          type: "boolean"
+          example: "true"
+        created_at:
+          type: "string"
+          example: "2024-01-12T17:21:10Z"
+
+    ProblemPost:
+      type: object
+      properties:
+        title:
+          type: "string"
+          example: "雑誌の付録"
+        author:
+          type: "string"
+          example: "yan"
+        statement:
+          type: "string"
+          example: "その雑誌は、今月は特別付録つきだった。Ａさんは、今までその雑誌を買ったことはなかったが、付録がついているのを見て、その日初めて買って帰った。しかし、Ａさんはその付録を一度も使うことがなかった。なぜだろう？"
+          
+    ProblemLike:
+      type: object
+      properties:
+        user_id:
+          type: "integer"
+          example: "1"
+        problem_id:
+          type: "integer"
+          example: "1"
+        is_liked:
+          type: "boolean"
+          example: "true"
+          
+    AuthUser:
+      type: object
+      properties:
+        email:
+          type: "string"
+          example: "example@gmail.com"
+        password:
+          type: "string"
+          example: "hogehoge"
+          
+    LoginResOK:
+      type: object
+      properties:
+        uuid:
+          type: "string"
+          example: "ecfeaf32-4222-5147-bb60-b1f29f5155df"
+          
+    ChatRoom:
+      type: object
+      properties:
+        problem_id:
+          type: "integer"
+          example: "1"
+        problem_title:
+          type: "string"
+          example: "hoge"
+        last_question:
+          type: "string"
+          example: "fugafuga"
+        created_at:
+          type: "string"
+          example: "2024-01-12T17:21:10Z"
+          
+          
+          
+          
+          
+          
+          
+          
