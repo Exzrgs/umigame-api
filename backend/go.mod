@@ -15,6 +15,7 @@ require (
 require github.com/google/uuid v1.4.0
 
 require (
+	github.com/kelseyhightower/envconfig v1.4.0 // indirect
 	github.com/yuin/goldmark v1.4.13 // indirect
 	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/tools v0.16.1 // indirect

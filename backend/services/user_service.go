@@ -20,7 +20,7 @@ func (s *Service) RegisterUserService(user models.User) error {
 		return err
 	}
 
-	hash, err := utils.PasswordEncrypt(user.Password)
+	hash, err := passwordEncrypt(user.Password)
 	if err != nil {
 		err = myerrors.EncryptFailed.Wrap(err, "internal server error")
 		return err

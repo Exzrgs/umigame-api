@@ -5,16 +5,22 @@ import (
 	"log"
 	"net/http"
 
+	"umigame-api/models"
 	"umigame-api/routers"
 	"umigame-api/tasks"
 	"umigame-api/utils"
+
+	"github.com/kelseyhightower/envconfig"
 )
 
 func main() {
 	port := flag.String("p", ":8080", "HTTP network port")
 	flag.Parse()
 
-	db, err := utils.ConnectDB()
+	var env models.Env
+	envconfig.Process("", &env)
+
+	db, err := utils.ConnectDB(env)
 	if err != nil {
 		log.Println(err)
 		return
