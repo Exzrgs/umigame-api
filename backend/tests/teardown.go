@@ -1,12 +1,12 @@
 package tests
 
 func (t *Test) Teardown() error {
-	err := cleanupDB()
+	err := cleanupDB(t.env)
 	if err != nil {
 		return err
 	}
 
-	t.DB.Close()
+	t.db.Close()
 
 	return nil
 }

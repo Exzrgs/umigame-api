@@ -1,2 +1,4 @@
 .env
 docker/db/init.sql
+docker/db/test_init.sql
+docker-compose-test.yml

@@ -44,25 +44,11 @@ func (a *Auth) Authorization(next http.Handler) http.Handler {
 		if err != nil {
 			myerrors.GenCookieFailed.Wrap(ErrNoData, "internal server error")
 			myerrors.ErrorHandler(w, req, err)
+			return
 		}
 
 		http.SetCookie(w, cookie)
 
 		next.ServeHTTP(w, req)
 	})
-}
-
-func authorize(db *sqlx.DB, uuid string) (int, error) {
-	sqlStr := `
-	SELECT id
-	FROM users
-	WHERE uuid = ?;
-	`
-
-	var userID int
-	if err := db.QueryRowx(sqlStr, uuid).Scan(&userID); err != nil {
-		return 0, err
-	}
-
-	return userID, nil
 }

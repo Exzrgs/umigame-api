@@ -6,12 +6,16 @@ services:
     build:
       dockerfile: docker/db/Dockerfile
       context: .
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "$MYSQL_ROOTUSER", "-p$MYSQL_ROOTPASS"]
+      interval: 3s
+      retries: 2
     environment:
-      MYSQL_ROOT_USER: ${ROOTUSER}
-      MYSQL_ROOT_PASSWORD: ${ROOTPASS}
-      MYSQL_DATABASE: ${DATABASE}
-      MYSQL_USER: ${USERNAME}
-      MYSQL_PASSWORD: ${USERPASS}
+      MYSQL_ROOT_USER: ${MYSQL_ROOTUSER}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOTPASS}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_USERPASS}
       TZ: 'Asia/Tokyo'
     ports:
       - "3306:3306"
@@ -22,6 +26,60 @@ services:
       - type: bind
         source: ./docker/db/init.sql
         target: /docker-entrypoint-initdb.d/init.sql
+  
+  app:
+    container_name: umigame-api
+    depends_on:
+      db:
+        condition: service_healthy
+    build:
+      dockerfile: docker/api/Dockerfile
+      context: .
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      EMAIL_ADDRESS: ${EMAIL_ADDRESS}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+      EMAIL_HOST: ${EMAIL_HOST}
+      EMAIL_PORT: ${EMAIL_PORT}
+      COOKIE_SECURE: ${COOKIE_SECURE}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    ports:
+      - "8080:8080"
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+
+  swagger-editor:
+    image: swaggerapi/swagger-editor
+    container_name: "swagger-editor"
+    ports:
+      - "10081:8080"
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: "swagger-ui"
+    ports:
+      - "10082:8080"
+    volumes:
+      - type: bind
+        source: ./api_reference.yaml
+        target: /usr/share/nginx/html/api_reference.yaml
+    environment:
+      API_URL: api_reference.yaml
+  swagger-api:
+    image: stoplight/prism:3
+    container_name: "swagger-api"
+    ports:
+      - "10083:4010"
+    command: mock -h 0.0.0.0 /api_reference.yaml
+    volumes:
+      - type: bind
+        source: ./api_reference.yaml
+        target: /api_reference.yaml
 
 volumes:
   umigame-db-volume:

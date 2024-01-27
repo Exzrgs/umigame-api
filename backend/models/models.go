@@ -45,3 +45,11 @@ type Chat struct {
 	Answer    *int       `json:"answer,omitempty" db:"answer"`
 	CreatedAt *time.Time `json:"created_at,omitempty" db:"created_at"`
 }
+
+type Env struct {
+	DBUser     string `envconfig:"DB_USER"`
+	DBPassword string `envconfig:"DB_PASSWORD"`
+	DBHost     string `envconfig:"DB_HOST"`
+	DBPort     string `envconfig:"DB_PORT"`
+	DBDatabase string `envconfig:"DB_DATABASE"`
+}

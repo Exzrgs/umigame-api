@@ -5,27 +5,12 @@ import (
 	"log"
 	"net/http"
 
+	"umigame-api/models"
 	"umigame-api/routers"
 	"umigame-api/tasks"
 	"umigame-api/utils"
 
-	"github.com/joho/godotenv"
-)
-
-func init() {
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-var (
-	dbUser     string
-	dbPassword string
-	dbHost     string
-	dbPort     string
-	dbDatabase string
-	dbConfig   string
+	"github.com/kelseyhightower/envconfig"
 )
 func enableCors(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -48,7 +33,10 @@ func main() {
 	port := flag.String("p", ":8080", "HTTP network port")
 	flag.Parse()
 
-	db, err := utils.ConnectDB()
+	var env models.Env
+	envconfig.Process("", &env)
+
+	db, err := utils.ConnectDB(env)
 	if err != nil {
 		log.Println(err)
 		return

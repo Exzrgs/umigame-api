@@ -17,6 +17,7 @@ problems(id, title, author, created_at, statement)
 func TestSelectProblemList_OK(t *testing.T) {
 	tests := []struct {
 		name     string
+		page     int
 		expected []models.Problem
 	}{
 		{
@@ -26,7 +27,7 @@ func TestSelectProblemList_OK(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		t.Run(test.title, func(t *testing.T) {
+		t.Run(test.name, func(t *testing.T) {
 			gotList, err := repositories.SelectProblemList(db, test.page)
 			if err != nil {
 				t.Fatal(err)
@@ -45,20 +46,20 @@ func TestSelectProblemList_OK(t *testing.T) {
 
 func Test_SelectProblem_OK(t *testing.T) {
 	tests := []struct {
-		title    string
+		name     string
 		ID       int
 		expected models.Problem
 	}{
 		{
-			title:    "basic",
-			ID:       testdata.SelectProblemDetail_Basic[0].ID,
-			expected: testdata.SelectProblemDetail_Basic[0],
+			name:     "basic",
+			ID:       testdata.SelectProblem_Basic[0].ID,
+			expected: testdata.SelectProblem_Basic[0],
 		},
 	}
 
 	for _, test := range tests {
-		t.Run(test.title, func(t *testing.T) {
-			got, err := repositories.SelectProblemDetail(db, test.ID)
+		t.Run(test.name, func(t *testing.T) {
+			got, err := repositories.SelectProblem(db, test.ID)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -83,12 +84,12 @@ problem(title, statement, answer, author, reference, reference_url)
 */
 func TestInsertProblem_Basic_OK(t *testing.T) {
 	tests := []struct {
-		title    string
+		name     string
 		problem  models.Problem
 		expected models.Problem
 	}{
 		{
-			title:    "basic",
+			name:     "basic",
 			problem:  testdata.InsertProblem_Basic[0],
 			expected: testdata.InsertProblem_Basic[0],
 		},
@@ -101,7 +102,7 @@ func TestInsertProblem_Basic_OK(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			got, err := repositories.SelectProblemDetail(db, problem.ID)
+			got, err := repositories.SelectProblem(db, problem.ID)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -130,51 +131,47 @@ func TestInsertProblem_Basic_OK(t *testing.T) {
 
 func TestInsertProblem_NoData_NG(t *testing.T) {
 	tests := []struct {
-		title    string
+		name     string
 		problem  models.Problem
 		expected string
 	}{
 		{
-			title:    "no title",
+			name:     "no title",
 			problem:  testdata.InsertProblem_NoData[0],
 			expected: "cause insert error",
 		},
 		{
-			title:    "no statement",
+			name:     "no statement",
 			problem:  testdata.InsertProblem_NoData[1],
 			expected: "cause insert error",
 		},
 		{
-			title:    "no answer",
+			name:     "no answer",
 			problem:  testdata.InsertProblem_NoData[2],
 			expected: "cause insert error",
 		},
 		{
-			title:    "no author",
+			name:     "no author",
 			problem:  testdata.InsertProblem_NoData[3],
 			expected: "cause insert error",
 		},
 		{
-			title:    "no reference",
+			name:     "no reference",
 			problem:  testdata.InsertProblem_NoData[4],
 			expected: "cause insert error",
 		},
 		{
-			title:    "no reference_url",
+			name:     "no reference_url",
 			problem:  testdata.InsertProblem_NoData[5],
 			expected: "cause insert error",
 		},
 	}
 
 	for _, test := range tests {
-		t.Run(test.title, func(t *testing.T) {
-			problem, err := repositories.InsertProblem(db, test.problem)
-			if err != nil {
-				t.Fatal(err)
-			}
-
+		t.Run(test.name, func(t *testing.T) {
+			_, err := repositories.InsertProblem(db, test.problem)
 			if err == nil { // "==" nil
-				t.Errorf("expected %v but got %v", test.expected, got)
+				t.Errorf("expected %v but got nil", test.expected)
 			}
 		})
 	}
@@ -182,55 +179,55 @@ func TestInsertProblem_NoData_NG(t *testing.T) {
 
 func TestInsertProblem_Char_OK(t *testing.T) {
 	tests := []struct {
-		title    string
+		name     string
 		problem  models.Problem
 		expected models.Problem
 	}{
 		{
-			title:    "katakana",
+			name:     "katakana",
 			problem:  testdata.InsertProblem_Char[0],
 			expected: testdata.InsertProblem_Char[0],
 		},
 		{
-			title:    "hiragana",
+			name:     "hiragana",
 			problem:  testdata.InsertProblem_Char[1],
 			expected: testdata.InsertProblem_Char[1],
 		},
 		{
-			title:    "kanji",
+			name:     "kanji",
 			problem:  testdata.InsertProblem_Char[2],
 			expected: testdata.InsertProblem_Char[2],
 		},
 		{
-			title:    "half-katakana",
+			name:     "half-katakana",
 			problem:  testdata.InsertProblem_Char[3],
 			expected: testdata.InsertProblem_Char[3],
 		},
 		{
-			title:    "symbol",
+			name:     "symbol",
 			problem:  testdata.InsertProblem_Char[4],
 			expected: testdata.InsertProblem_Char[4],
 		},
 		{
-			title:    "space",
+			name:     "space",
 			problem:  testdata.InsertProblem_Char[5],
 			expected: testdata.InsertProblem_Char[5],
 		},
 		{
-			title:    "special char",
+			name:     "special char",
 			problem:  testdata.InsertProblem_Char[6],
 			expected: testdata.InsertProblem_Char[6],
 		},
 	}
 
 	for _, test := range tests {
-		t.Run(test.title, func(t *testing.T) {
+		t.Run(test.name, func(t *testing.T) {
 			problem, err := repositories.InsertProblem(db, test.problem)
 			if err != nil {
 				t.Fatal(err)
 			}
 
-			got, err := repositories.SelectProblemDetail(db, problem.ID)
+			got, err := repositories.SelectProblem(db, problem.ID)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -244,51 +241,47 @@ func TestInsertProblem_Char_OK(t *testing.T) {
 
 func TestInsertProblem_TooLong_NG(t *testing.T) {
 	tests := []struct {
-		title    string
+		name     string
 		problem  models.Problem
 		expected string
 	}{
 		{
-			title:    "too long title",
+			name:     "too long title",
 			problem:  testdata.InsertProblem_TooLong[0],
 			expected: "cause insert error",
 		},
 		{
-			title:    "too long author",
+			name:     "too long author",
 			problem:  testdata.InsertProblem_TooLong[1],
 			expected: "cause insert error",
 		},
 		{
-			title:    "too long reference",
+			name:     "too long reference",
 			problem:  testdata.InsertProblem_TooLong[2],
 			expected: "cause insert error",
 		},
 		{
-			title:    "too long author",
+			name:     "too long author",
 			problem:  testdata.InsertProblem_TooLong[3],
 			expected: "cause insert error",
 		},
 		{
-			title:    "too long reference",
+			name:     "too long reference",
 			problem:  testdata.InsertProblem_TooLong[4],
 			expected: "cause insert error",
 		},
 		{
-			title:    "too long reference_url",
+			name:     "too long reference_url",
 			problem:  testdata.InsertProblem_TooLong[5],
 			expected: "cause insert error",
 		},
 	}
 
 	for _, test := range tests {
-		t.Run(test.title, func(t *testing.T) {
-			problem, err := repositories.InsertProblem(db, test.problem)
-			if err != nil {
-				t.Fatal(err)
-			}
-
+		t.Run(test.name, func(t *testing.T) {
+			_, err := repositories.InsertProblem(db, test.problem)
 			if err == nil { // "==" nil
-				t.Errorf("expected %v but got %v", test.expected, got)
+				t.Errorf("expected %v but got nil", test.expected)
 			}
 		})
 	}
@@ -296,30 +289,30 @@ func TestInsertProblem_TooLong_NG(t *testing.T) {
 
 func TestInsertProblem_Long_OK(t *testing.T) {
 	tests := []struct {
-		title    string
+		name     string
 		problem  models.Problem
 		expected models.Problem
 	}{
 		{
-			title:    "long statement",
+			name:     "long statement",
 			problem:  testdata.InsertProblem_Long[0],
 			expected: testdata.InsertProblem_Long[0],
 		},
 		{
-			title:    "long answer",
+			name:     "long answer",
 			problem:  testdata.InsertProblem_Long[1],
 			expected: testdata.InsertProblem_Long[1],
 		},
 	}
 
 	for _, test := range tests {
-		t.Run(test.title, func(t *testing.T) {
+		t.Run(test.name, func(t *testing.T) {
 			problem, err := repositories.InsertProblem(db, test.problem)
 			if err != nil {
 				t.Fatal(err)
 			}
 
-			got, err := repositories.SelectProblemDetail(db, problem.ID)
+			got, err := repositories.SelectProblem(db, problem.ID)
 			if err != nil {
 				t.Fatal(err)
 			}
