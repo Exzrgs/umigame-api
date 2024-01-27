@@ -1,45 +1,25 @@
 package tests
 
 import (
-	"database/sql"
-	"os"
 	"fmt"
 	"os/exec"
 
-	"github.com/joho/godotenv"
+	"umigame-api/models"
+
+	"github.com/jmoiron/sqlx"
 )
-
-var (
-	db         *sql.DB
-	dbUser     string
-	dbPassword string
-	dbHost     string
-	dbPort     string
-	dbDatabase string
-	dbConfig   string
-)
-
-func init() {
-	err := godotenv.Load("../.env")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	dbUser = os.Getenv("DB_USER")
-	dbPassword = os.Getenv("DB_PASSWORD")
-	dbHost = os.Getenv("DB_HOST")
-	dbPort = os.Getenv("DB_PORT")
-	dbDatabase = os.Getenv("DB_DATABASE")
-	dbConfig = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", dbUser, dbPassword, dbHost, dbPort, dbDatabase)
-}
 
 type Test struct {
-	DB *sql.DB
+	db  *sqlx.DB
+	env models.Env
 }
 
-func setupTestData() error {
-	cmd := exec.Command("mysql", "-h", dbHost, "-u", dbUser, dbDatabase, fmt.Sprintf("--password=%s", dbPassword), "-e", "source ./testdata/setupDB.sql")
+func NewTest(db *sqlx.DB, env models.Env) *Test {
+	return &Test{db: db, env: env}
+}
+
+func setupTestData(env models.Env) error {
+	cmd := exec.Command("mysql", "-h", env.DBHost, "-u", env.DBUser, env.DBDatabase, fmt.Sprintf("--password=%s", env.DBPassword), "-e", "source ./testdata/setupDB.sql")
 
 	err := cmd.Run()
 	if err != nil {
@@ -49,11 +29,10 @@ func setupTestData() error {
 	return nil
 }
 
-func cleanupDB() error {
-	cmd := exec.Command("mysql", "-h", dbHost, "-u", dbUser, dbDatabase, fmt.Sprintf("--password=%s", dbPassword), "-e", "source ./testdata/cleanupDB.sql")
+func cleanupDB(env models.Env) error {
+	cmd := exec.Command("mysql", "-h", env.DBHost, "-u", env.DBUser, env.DBDatabase, fmt.Sprintf("--password=%s", env.DBPassword), "-e", "source ./testdata/cleanupDB.sql")
 
-	var err error
-	err = cmd.Run()
+	err := cmd.Run()
 	if err != nil {
 		return err
 	}

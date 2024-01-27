@@ -1,50 +1,52 @@
 package main
 
 import (
-	"database/sql"
 	"flag"
 	"log"
 	"net/http"
 
+	"umigame-api/models"
 	"umigame-api/routers"
 	"umigame-api/tasks"
 	"umigame-api/utils"
 
-	"github.com/joho/godotenv"
+	"github.com/kelseyhightower/envconfig"
 )
+func enableCors(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        // ここにCORS設定を記述
+        w.Header().Set("Access-Control-Allow-Origin", "*")
+        w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+        w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, Authorization,X-CSRF-Token")
 
-func init() {
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatal(err)
-	}
+        // OPTIONSメソッドに対するプリフライトリクエストへの対応
+        if r.Method == "OPTIONS" {
+            w.WriteHeader(http.StatusOK)
+            return
+        }
+
+        next.ServeHTTP(w, r)
+    })
 }
 
-var (
-	db         *sql.DB
-	dbUser     string
-	dbPassword string
-	dbHost     string
-	dbPort     string
-	dbDatabase string
-	dbConfig   string
-)
-
-// a
 func main() {
 	port := flag.String("p", ":8080", "HTTP network port")
 	flag.Parse()
 
-	db, err := utils.ConnectDB()
+	var env models.Env
+	envconfig.Process("", &env)
+
+	db, err := utils.ConnectDB(env)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
 	r := routers.NewRouter(db, *port)
-
+	wrappedHandler := enableCors(r)
+    http.Handle("/", wrappedHandler)
 	go tasks.ExeTasks(db)
 
 	log.Printf("server start at port %s", *port)
-	log.Fatal(http.ListenAndServe(*port, r))
+	log.Fatal(http.ListenAndServe(*port, wrappedHandler))
 }

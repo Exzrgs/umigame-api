@@ -1,14 +1,47 @@
-create table if not exists problems (
-    id integer unsigned auto_increment primary key,
-    title varchar(100) not null,
-    problem_statement text not null,
-    answer text not null,
-    created_at datetime not null
+CREATE TABLE IF NOT EXISTS problems (
+    id INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    statement TEXT NOT NULL,
+    answer TEXT NOT NULL,
+    author VARCHAR(100) NOT NULL,
+    reference VARCHAR(100) NOT NULL,
+    reference_url VARCHAR(500) NOT NULL,
+    created_at DATETIME NOT NULL
 );
 
-insert into problems (title, problem_statement, answer, created_at) values 
-('test1', '赤くて甘い果物は?', 'りんご', now());
-insert into problems (title, problem_statement, answer, created_at) values 
-('test2', '黄色で酸っぱい果物は?', 'レモン', now());
-insert into problems (title, problem_statement, answer, created_at) values 
-('test3', '紫で甘い果物は?', 'ぶどう', now());
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(100) NOT NULL,
+    uuid VARCHAR(100),
+    is_valid BOOLEAN NOT NULL,
+    created_at DATETIME
+);
+
+CREATE TABLE IF NOT EXISTS users_problems (
+    problem_id INTEGER UNSIGNED AUTO_INCREMENT UNIQUE NOT NULL,
+    user_id INTEGER UNSIGNED AUTO_INCREMENT UNIQUE NOT NULL,
+    is_solved BOOLEAN NOT NULL,
+    is_liked BOOLEAN NOT NULL,
+    FOREIGN KEY problem_id REFERENCES problems(id),
+    FOREIGN KEY user_id REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXISTS chats (
+    id INTEGER PRIMARY KEY,
+    problem_id INTEGER UNIQUE NOT NULL,
+    user_id INTEGER UNIQUE NOT NULL,
+    question TEXT NOT NULL,
+    answer TEXT NOT NULL,
+    created_at DATETIME NOT NULL,
+    FOREIGN KEY problem_id REFERENCES problems(id),
+    FOREIGN KEY user_id REFERENCES users(id)
+);
+
+INSERT INTO problems (title, statement, answer, author, reference, reference_url) values
+('test1', 'test1', 'test1', 'test1', 'test1', 'test1',);
+INSERT INTO problems (title, statement, answer, author, reference, reference_url) values
+('test2', 'test2', 'test2', 'test2', 'test2', 'test2',);
+INSERT INTO problems (title, statement, answer, author, reference, reference_url) values
+('test3', 'test3', 'test3', 'test3', 'test3', 'test3',);

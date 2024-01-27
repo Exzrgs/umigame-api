@@ -1,1 +1,4 @@
-drop table if exists problems;
+DROP TABLE IF EXISTS problems;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS users_problems;
+DROP TABLE IF EXISTS chats;

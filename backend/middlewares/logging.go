@@ -3,6 +3,7 @@ package middlewares
 import (
 	"log"
 	"net/http"
+	"umigame-api/utils"
 )
 
 type loggingResWriter struct {
@@ -24,11 +25,11 @@ func (lw *loggingResWriter) WriteHeader(code int) {
 
 func Logging(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		traceID := NewTraceID()
+		traceID := utils.NewTraceID()
 
 		log.Printf("[%d]%s %s\n", traceID, req.RequestURI, req.Method)
 
-		ctx := SetTraceID(req.Context(), traceID)
+		ctx := utils.SetTraceID(req.Context(), traceID)
 		req = req.WithContext(ctx)
 
 		lw := NewLoggingResWriter(w)

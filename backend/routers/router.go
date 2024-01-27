@@ -1,7 +1,6 @@
 package routers
 
 import (
-	"database/sql"
 	"net/http"
 
 	"umigame-api/controllers"
@@ -9,23 +8,39 @@ import (
 	"umigame-api/services"
 
 	"github.com/gorilla/mux"
+	"github.com/jmoiron/sqlx"
 )
 
-func NewRouter(db *sql.DB, port string) *mux.Router {
+func NewRouter(db *sqlx.DB, port string) *mux.Router {
 	r := mux.NewRouter()
-
 	s := services.NewServicer(db, port)
-	c := controllers.NewController(s, db)
-
-	r.HandleFunc("/problem/list", c.GetProblemListHandler).Methods(http.MethodGet)
-	r.HandleFunc("/problem/detail", c.GetProblemDetailHandler).Methods(http.MethodGet)
-	r.HandleFunc("/problem/add", c.PostProblemHandler).Methods(http.MethodPost)
-	r.HandleFunc("/auth/register", c.RegisterUserHandler).Methods(http.MethodPost)
-	r.HandleFunc("/auth/login", c.LoginHandler).Methods(http.MethodPost)
-	r.HandleFunc("/auth/mail", c.MailCheckHandler).Methods(http.MethodGet)
-	// r.HandleFunc("/auth/cookie")
+	pc := controllers.NewProblemController(s)
+	uc := controllers.NewUserController(s)
+	ac := controllers.NewActivityController(s)
+	cc := controllers.NewChatController(s)
+	authMiddleware := middlewares.NewAuthMiddlewarer(db, s)
 
 	r.Use(middlewares.Logging)
+
+	r.HandleFunc("/auth/register", uc.RegisterUserHandler).Methods(http.MethodPost)
+	r.HandleFunc("/auth/login", uc.LoginHandler).Methods(http.MethodPost)
+	r.HandleFunc("/auth/mail", uc.MailCheckHandler).Methods(http.MethodGet)
+
+	problemRouter := r.PathPrefix("/problem").Subrouter()
+	problemRouter.Use(authMiddleware.Authorization)
+
+	problemRouter.HandleFunc("/list", pc.GetProblemListHandler).Methods(http.MethodGet)
+	problemRouter.HandleFunc("/{id:[0-9]+}", pc.GetProblemDetailHandler).Methods(http.MethodGet)
+	problemRouter.HandleFunc("/add", pc.PostProblemHandler).Methods(http.MethodPost)
+	problemRouter.HandleFunc("/like", ac.ChangeLikedHandler).Methods(http.MethodPost)
+	// appRouter.HandleFunc("/solve", ac.).Methods(http.MethodPost)
+
+	chatRouter := r.PathPrefix("/chat").Subrouter()
+	chatRouter.Use(authMiddleware.Authorization)
+
+	chatRouter.HandleFunc("/room/list", cc.GetChatroomListHandler).Methods(http.MethodGet)
+	chatRouter.HandleFunc("/question", cc.PostQuestionHandler).Methods(http.MethodPost)
+	// chatRouter.HandleFunc("/room/delete").Methods(http.MethodDelete)
 
 	return r
 }
