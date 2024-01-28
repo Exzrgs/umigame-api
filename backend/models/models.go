@@ -9,13 +9,13 @@ Here are DB models
 */
 
 type Problem struct {
-	ID           int        `json:"id,omitempty" db:"id"`
-	Title        string     `json:"title,omitempty" db:"title"`
-	Statement    string     `json:"statement,omitempty" db:"statement"`
-	Answer       string     `json:"answer,omitempty" db:"answer"`
-	Author       string     `json:"author,omitempty" db:"author"`
-	Reference    string     `json:"reference,omitempty" db:"reference"`
-	ReferenceURL string     `json:"reference_url,omitempty" db:"reference_url"`
+	ID           int        `json:"id,omitempty" db:"id,omitempty"`
+	Title        string     `json:"title,omitempty" db:"title,omitempty"`
+	Statement    string     `json:"statement,omitempty" db:"statement,omitempty"`
+	Answer       string     `json:"answer,omitempty" db:"answer,omitempty"`
+	Author       string     `json:"author,omitempty" db:"author,omitempty"`
+	Reference    string     `json:"reference,omitempty" db:"reference,omitempty"`
+	ReferenceURL string     `json:"reference_url,omitempty" db:"reference_url,omitempty"`
 	CreatedAt    *time.Time `json:"created_at,omitempty" db:"created_at"` // ポインタにするとnilになるからomitemptyが機能する
 }
 

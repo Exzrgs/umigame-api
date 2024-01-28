@@ -10,13 +10,8 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "$MYSQL_ROOTUSER", "-p$MYSQL_ROOTPASS"]
       interval: 3s
       retries: 2
-    environment:
-      MYSQL_ROOT_USER: ${MYSQL_ROOTUSER}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOTPASS}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USERNAME}
-      MYSQL_PASSWORD: ${MYSQL_USERPASS}
-      TZ: 'Asia/Tokyo'
+    env_file:
+      - .env
     ports:
       - "3306:3306"
     volumes:
@@ -35,18 +30,8 @@ services:
     build:
       dockerfile: docker/api/Dockerfile
       context: .
-    environment:
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_DATABASE: ${DB_DATABASE}
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
-      EMAIL_ADDRESS: ${EMAIL_ADDRESS}
-      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
-      EMAIL_HOST: ${EMAIL_HOST}
-      EMAIL_PORT: ${EMAIL_PORT}
-      COOKIE_SECURE: ${COOKIE_SECURE}
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    env_file:
+      - .env
     ports:
       - "8080:8080"
     volumes:
