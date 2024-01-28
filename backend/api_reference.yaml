@@ -140,6 +140,15 @@ paths:
               schema:
                 type: object
                 properties:
+                  problem_id:
+                    type: "integer"
+                    example: "1"
+                  user_id:
+                    type: "integer"
+                    example: "1"
+                  question:
+                    type: "string"
+                    example: "hogehoge"
                   answer:
                     type: "integer"
                     example: "1"
