@@ -7,13 +7,13 @@ import (
 func (t *Test) Setup() error {
 	err := cleanupDB(t.env)
 	if err != nil {
-		fmt.Println("cleanup:", err.Error())
+		fmt.Println("cleanup:", err)
 		return err
 	}
 
 	err = setupTestData(t.env)
 	if err != nil {
-		fmt.Println("setup:", err.Error())
+		fmt.Println("setup:", err)
 		return err
 	}
 

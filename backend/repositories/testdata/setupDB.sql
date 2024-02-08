@@ -14,62 +14,34 @@ CREATE TABLE IF NOT EXISTS users (
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(100) NOT NULL,
-    uuid VARCHAR(100) UNIQUE,
+    uuid VARCHAR(100),
     is_valid BOOLEAN NOT NULL,
     created_at DATETIME
 );
 
-CREATE TABLE IF NOT EXISTS activities (
-    problem_id INTEGER UNSIGNED NOT NULL,
-    user_id INTEGER UNSIGNED NOT NULL,
-    is_solved BOOLEAN DEFAULT FALSE NOT NULL,
-    is_liked BOOLEAN DEFAULT FALSE NOT NULL,
-    FOREIGN KEY (problem_id) REFERENCES problems(id),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    PRIMARY KEY (problem_id, user_id)
+CREATE TABLE IF NOT EXISTS users_problems (
+    problem_id INTEGER UNSIGNED AUTO_INCREMENT UNIQUE NOT NULL,
+    user_id INTEGER UNSIGNED AUTO_INCREMENT UNIQUE NOT NULL,
+    is_solved BOOLEAN NOT NULL,
+    is_liked BOOLEAN NOT NULL,
+    FOREIGN KEY problem_id REFERENCES problems(id),
+    FOREIGN KEY user_id REFERENCES users(id)
 );
 
 CREATE TABLE IF NOT EXISTS chats (
-    id INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    problem_id INTEGER UNSIGNED NOT NULL,
-    user_id INTEGER UNSIGNED NOT NULL,
+    id INTEGER PRIMARY KEY,
+    problem_id INTEGER UNIQUE NOT NULL,
+    user_id INTEGER UNIQUE NOT NULL,
     question TEXT NOT NULL,
-    answer INTEGER NOT NULL,
+    answer TEXT NOT NULL,
     created_at DATETIME NOT NULL,
-    FOREIGN KEY (problem_id) REFERENCES problems(id),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    INDEX user_problem_index (problem_id, user_id)
+    FOREIGN KEY problem_id REFERENCES problems(id),
+    FOREIGN KEY user_id REFERENCES users(id)
 );
 
-INSERT INTO problems (title, statement, answer, author, reference, reference_url, created_at)
-VALUES (
-    "test1", 
-    "test1",
-    "test1",
-    "test1",
-    "test1",
-    "test1",
-    "2023-01-28 12:00:00"
-);
-
-INSERT INTO problems (title, statement, answer, author, reference, reference_url, created_at)
-VALUES (
-    "test2", 
-    "test2",
-    "test2",
-    "test2",
-    "test2",
-    "test2",
-    "2023-01-28 12:00:00"
-);
-
-INSERT INTO problems (title, statement, answer, author, reference, reference_url, created_at)
-VALUES (
-    "test3", 
-    "test3",
-    "test3",
-    "test3",
-    "test3",
-    "test3",
-    "2023-01-28 12:00:00"
-);
+INSERT INTO problems (title, statement, answer, author, reference, reference_url) values
+('test1', 'test1', 'test1', 'test1', 'test1', 'test1',);
+INSERT INTO problems (title, statement, answer, author, reference, reference_url) values
+('test2', 'test2', 'test2', 'test2', 'test2', 'test2',);
+INSERT INTO problems (title, statement, answer, author, reference, reference_url) values
+('test3', 'test3', 'test3', 'test3', 'test3', 'test3',);

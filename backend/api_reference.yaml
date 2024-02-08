@@ -52,6 +52,7 @@ paths:
     post:
       tags:
         - problem
+      summary: add problem
       description: add problem
       responses:
         '200':
@@ -65,6 +66,7 @@ paths:
     post:
       tags:
         - problem
+      summary: like problem
       description: like problem
       responses:
         '200':
@@ -78,7 +80,8 @@ paths:
     post:
       tags:
         - auth
-      description: register user
+      summary: like problem
+      description: like problem
       requestBody:
         content:
           application/json:
@@ -92,7 +95,8 @@ paths:
     post:
       tags:
         - auth
-      description: login user
+      summary: like problem
+      description: like problem
       requestBody:
         content:
           application/json:
@@ -110,7 +114,8 @@ paths:
     post:
       tags:
         - chat
-      description: get chat room list
+      summary: like problem
+      description: like problem
       responses:
         '200':
           description: Successful operation
@@ -125,7 +130,8 @@ paths:
     post:
       tags:
         - chat
-      description: post question and get answer
+      summary: like problem
+      description: like problem
       responses:
         '200':
           description: 1はyes, 0はno, 2はunknown
@@ -134,15 +140,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  problem_id:
-                    type: "integer"
-                    example: "1"
-                  user_id:
-                    type: "integer"
-                    example: "1"
-                  question:
-                    type: "string"
-                    example: "hogehoge"
                   answer:
                     type: "integer"
                     example: "1"

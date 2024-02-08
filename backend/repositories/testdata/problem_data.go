@@ -1,11 +1,8 @@
 package testdata
 
 import (
-	"time"
 	"umigame-api/models"
 )
-
-var testDate = time.Date(2023, 1, 28, 12, 0, 0, 0, time.UTC)
 
 ///////////////////////////////////////////////////////////
 
@@ -19,21 +16,18 @@ var SelectProblemList_Basic = []models.Problem{
 		Title:     "test1",
 		Author:    "test1",
 		Statement: "test1",
-		CreatedAt: &testDate,
 	},
 	{
 		ID:        2,
 		Title:     "test2",
 		Author:    "test2",
 		Statement: "test2",
-		CreatedAt: &testDate,
 	},
 	{
 		ID:        3,
 		Title:     "test3",
 		Author:    "test3",
 		Statement: "test3",
-		CreatedAt: &testDate,
 	},
 }
 
@@ -48,7 +42,6 @@ var SelectProblem_Basic = []models.Problem{
 		Author:       "test1",
 		Reference:    "test1",
 		ReferenceURL: "test1",
-		CreatedAt:    &testDate,
 	},
 }
 

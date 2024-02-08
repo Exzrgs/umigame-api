@@ -48,7 +48,7 @@ func SelectProblemList(db *sqlx.DB, page int) ([]models.Problem, error) {
 
 func SelectProblem(db *sqlx.DB, id int) (models.Problem, error) {
 	sqlStr := `
-	SELECT id, title, statement, answer, author, reference, reference_url, created_at
+	SELECT title, statement, answer, author, reference, reference_url, created_at
 	FROM problems
 	WHERE id = ?;
 	`
