@@ -22,7 +22,7 @@ func (s *Service) GetProblemListService(page int) ([]models.ProblemBase, error) 
 	for i, problem := range problemList {
 		problemIDs[i] = problem.ID
 	}
-	activityList, err := repositories.SelectActivityList(s.db, s.userID, page, problemIDs)
+	activityList, err := repositories.SelectActivityList(s.db, s.userID, problemIDs)
 	if err != nil {
 		return nil, err
 	}

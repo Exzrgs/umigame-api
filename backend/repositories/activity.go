@@ -7,13 +7,13 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func SelectActivityList(db *sqlx.DB, userID int, page int, problemIDs []int) ([]models.Activity, error) {
+func SelectActivityList(db *sqlx.DB, userID int, problemIDs []int) ([]models.Activity, error) {
 	sqlStr := `
 	SELECT problem_id, is_solved, is_liked
 	FROM activities
 	WHERE user_id = ? AND problem_id IN (?);
 	`
-
+	
 	sqlStr, params, err := sqlx.In(sqlStr, userID, problemIDs)
 	if err != nil {
 		myerrors.SQLPrepareFailed.Wrap(err, "internal server error")

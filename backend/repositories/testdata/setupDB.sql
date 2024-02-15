@@ -73,3 +73,37 @@ VALUES (
     "test3",
     "2023-01-28 12:00:00"
 );
+
+INSERT INTO users (name, email, password_hash, uuid, is_valid, created_at)
+VALUES (
+    "test1",
+    "test1",
+    "test1",
+    "test1",
+    TRUE,
+    "2023-01-28 12:00:00"
+);
+
+INSERT INTO activities (problem_id, user_id, is_solved, is_liked)
+VALUES (
+    1,
+    1,
+    TRUE,
+    TRUE
+);
+
+INSERT INTO activities (problem_id, user_id, is_solved, is_liked)
+VALUES (
+    2,
+    1,
+    TRUE,
+    FALSE
+);
+
+INSERT INTO activities (problem_id, user_id, is_solved, is_liked)
+VALUES (
+    3,
+    1,
+    FALSE,
+    TRUE
+);

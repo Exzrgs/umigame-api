@@ -1,39 +1,57 @@
 package repositories_test
 
-// import (
-// 	"testing"
-// 	"umigame-api/models"
-// )
+import (
+	"testing"
+	"umigame-api/models"
+	"umigame-api/repositories"
+	"umigame-api/repositories/testdata"
+)
 
-// func TestGetActivities(t *testing.T) {
-// 	tests := []struct {
-// 		title    string
-// 		userID   int
-// 		expected models.Activity
-// 	}{
-// 		{
-// 			title:    "basic",
-// 			userID:   testdata.GetActivities_Basic[0].UserID,
-// 			expected: testdata.GetActivities_Basic[0],
-// 		},
-// 	}
+func TestSelectActivityList(t *testing.T) {
+	tests := []struct {
+		name       string
+		userID     int
+		problemIDs []int
+		expected   []models.Activity
+	}{
+		{
+			name:   "basic",
+			userID: testdata.SelectActivityList_Basic[0].UserID,
+			problemIDs: []int{
+				testdata.SelectActivityList_Basic[0].ProblemID,
+				testdata.SelectActivityList_Basic[1].ProblemID,
+				testdata.SelectActivityList_Basic[2].ProblemID,
+			},
+			expected: []models.Activity{
+				testdata.SelectActivityList_Basic[0],
+				testdata.SelectActivityList_Basic[1],
+				testdata.SelectActivityList_Basic[2],
+			},
+		},
+	}
 
-// 	for _, test := range tests {
-// 		t.Run(test.title, func(t *testing.T) {
-// 			got, err := repositories.GetActivities(db, test.userID)
-// 			if err != nil {
-// 				t.Fatal(err)
-// 			}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gots, err := repositories.SelectActivityList(db, tt.userID, tt.problemIDs)
+			if err != nil {
+				t.Fatal(err)
+			}
 
-// 			if got.Solved != test.expected.Solved {
-// 				t.Errorf("solved problem list is expected %+v but got %+v\n", test.expected.Solved, got.Solved)
-// 			}
-// 			if got.LikedProblems != test.expected.LikedProblems {
-// 				t.Errorf("liked problem list is expected %+v but got %+v\n", test.expected.LikedProblems, got.LikedProblems)
-// 			}
-// 		})
-// 	}
-// }
+			if len(gots) != len(tt.expected) {
+				t.Errorf("activity list is expected %+v but got %+v\n", tt.expected, gots)
+			}
+
+			for i, got := range gots {
+				if got.IsSolved != tt.expected[i].IsSolved {
+					t.Errorf("solved problem list is expected %+v but got %+v\n", tt.expected[i].IsSolved, got.IsSolved)
+				}
+				if got.IsLiked != tt.expected[i].IsLiked {
+					t.Errorf("liked problem list is expected %+v but got %+v\n", tt.expected[i].IsLiked, got.IsLiked)
+				}
+			}
+		})
+	}
+}
 
 // func TestAddSolved_Basic_OK(t *testing.T) {
 // 	tests := []struct {
