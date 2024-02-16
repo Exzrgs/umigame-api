@@ -7,7 +7,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func SelectActivityList(db *sqlx.DB, userID int, page int, problemIDs []int) ([]models.Activity, error) {
+func SelectActivityList(db *sqlx.DB, userID int, problemIDs []int) ([]models.Activity, error) {
 	sqlStr := `
 	SELECT problem_id, is_solved, is_liked
 	FROM activities
@@ -72,7 +72,7 @@ func ChangeLiked(db *sqlx.DB, userID int, activity models.Activity) error {
 	ON DUPLICATE KEY UPDATE is_liked = ?;
 	`
 
-	_, err := db.Exec(sqlStr, activity.ProblemID, userID, !activity.IsLiked, !activity.IsLiked)
+	_, err := db.Exec(sqlStr, activity.ProblemID, userID, activity.IsLiked, activity.IsLiked)
 	if err != nil {
 		err = myerrors.InsertDataFailed.Wrap(err, "failed to insert data")
 		return err
