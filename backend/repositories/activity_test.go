@@ -55,14 +55,16 @@ func TestSelectActivityList(t *testing.T) {
 
 // func TestAddSolved_Basic_OK(t *testing.T) {
 // 	tests := []struct {
-// 		title    string
-// 		userID   int
-// 		expected models.Activity
+// 		title     string
+// 		userID    int
+// 		problemID int
+// 		expected  models.Activity
 // 	}{
 // 		{
-// 			title:    "basic",
-// 			userID:   testdata.AddSolved_Basic[0].UserID,
-// 			expected: testdata.AddSolved_Basic[0].Solved,
+// 			title:     "basic",
+// 			userID:    testdata.AddSolved_Basic[0].UserID,
+// 			problemID: testdata.AddSolved_Basic[0].ProblemID,
+// 			expected:  testdata.AddSolved_Basic[0].Solved,
 // 		},
 // 	}
 
@@ -84,35 +86,41 @@ func TestSelectActivityList(t *testing.T) {
 // 	}
 // }
 
-// func TestAddLikedProblem_Basic_OK(t *testing.T) {
-// 	tests := []struct {
-// 		title    string
-// 		userID   int
-// 		expected models.Activity
-// 	}{
-// 		{
-// 			title:    "basic",
-// 			userID:   testdata.AddLikedProblem_Basic[0].UserID,
-// 			expected: testdata.AddLikedProblem_Basic[0].LikedProblems,
-// 		},
-// 	}
+func TestChangeLiked_Basic_OK(t *testing.T) {
+	tests := []struct {
+		name     string
+		userID   int
+		activity models.Activity
+		expected bool
+	}{
+		{
+			name:     "basic",
+			userID:   testdata.ChangeLiked_Basic[0].UserID,
+			activity: testdata.ChangeLiked_Basic[0],
+			expected: testdata.ChangeLiked_Basic[0].IsLiked,
+		},
+		{
+			name:     "duplicate",
+			userID:   testdata.ChangeLiked_Basic[1].UserID,
+			activity: testdata.ChangeLiked_Basic[1],
+			expected: testdata.ChangeLiked_Basic[1].IsLiked,
+		},
+	}
 
-// 	for _, test := range tests {
-// 		t.Run(test.title, func(t *testing.T) {
-// 			if err := repositories.AddLikedProblem(db, test.userID); err != nil {
-// 				t.Fatal(err)
-// 			}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := repositories.ChangeLiked(db, tt.userID, tt.activity); err != nil {
+				t.Fatal(err)
+			}
 
-// 			got, err := repositories.GetActivities(db, test.userID)
-// 			if err != nil {
-// 				t.Fatal(err)
-// 			}
+			got, err := repositories.SelectActivity(db, tt.userID, tt.activity.ProblemID)
+			if err != nil {
+				t.Fatal(err)
+			}
 
-// 			if got.LikedProblems != test.expected {
-// 				t.Errorf("solved liked problem list is expected %+v but got %+v\n", test.expected, got.LikedProblems)
-// 			}
-// 		})
-// 	}
-// }
-
-// // func TestDeleteLiked_Basic_OK() {}
+			if got.IsLiked != tt.expected {
+				t.Errorf("solved liked problem list is expected %+v but got %+v\n", tt.expected, got.IsLiked)
+			}
+		})
+	}
+}

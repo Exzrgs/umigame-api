@@ -27,24 +27,23 @@ var SelectActivityList_Basic = []models.Activity{
 
 // var AddSolved_Basic = []models.Activity{
 // 	{
-// 		UserID:        1,
-// 		Solved:        []int{1, 2, 3, 4},
-// 		LikedProblems: []int{1, 2, 3},
+// 		UserID:    1,
+// 		ProblemID: 1,
+// 		IsSolved:  true,
 // 	},
 // }
 
-// var AddLiked_Basic = []models.Activity{
-// 	{
-// 		UserID:        1,
-// 		Solved:        []int{1, 2, 3},
-// 		LikedProblems: []int{1, 2, 3, 4},
-// 	},
-// }
-
-// var DeleteLiked_Basic = []models.Activity{
-// 	{
-// 		UserID:        1,
-// 		Solved:        []int{1, 2, 3},
-// 		LikedProblems: []int{1, 2},
-// 	},
-// }
+var ChangeLiked_Basic = []models.Activity{
+	{
+		UserID:    1,
+		ProblemID: 1,
+		IsSolved:  true,
+		IsLiked:   false,
+	},
+	{
+		UserID:    1,
+		ProblemID: 1,
+		IsSolved:  true,
+		IsLiked:   true,
+	},
+}

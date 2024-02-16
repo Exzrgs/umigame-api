@@ -13,7 +13,7 @@ func SelectActivityList(db *sqlx.DB, userID int, problemIDs []int) ([]models.Act
 	FROM activities
 	WHERE user_id = ? AND problem_id IN (?);
 	`
-	
+
 	sqlStr, params, err := sqlx.In(sqlStr, userID, problemIDs)
 	if err != nil {
 		myerrors.SQLPrepareFailed.Wrap(err, "internal server error")
@@ -72,7 +72,7 @@ func ChangeLiked(db *sqlx.DB, userID int, activity models.Activity) error {
 	ON DUPLICATE KEY UPDATE is_liked = ?;
 	`
 
-	_, err := db.Exec(sqlStr, activity.ProblemID, userID, !activity.IsLiked, !activity.IsLiked)
+	_, err := db.Exec(sqlStr, activity.ProblemID, userID, activity.IsLiked, activity.IsLiked)
 	if err != nil {
 		err = myerrors.InsertDataFailed.Wrap(err, "failed to insert data")
 		return err
