@@ -35,7 +35,7 @@ func (s *Service) RegisterUserService(user models.User) error {
 	mailAuthUuid := uuidObj.String()
 	user.UUID = mailAuthUuid
 
-	if err = repositories.RegisterUser(s.db, &user); err != nil {
+	if err = repositories.InsertUser(s.db, &user); err != nil {
 		return err
 	}
 

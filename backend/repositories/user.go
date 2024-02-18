@@ -10,7 +10,7 @@ import (
 	"umigame-api/myerrors"
 )
 
-func RegisterUser(db *sqlx.DB, user *models.User) error {
+func InsertUser(db *sqlx.DB, user *models.User) error {
 	const sqlStr = `
 	INSERT INTO users (name, email, password_hash, uuid, is_valid, created_at) VALUES
 	(?, ?, ?, ?, false, now());
@@ -25,6 +25,27 @@ func RegisterUser(db *sqlx.DB, user *models.User) error {
 	}
 
 	return nil
+}
+
+func SelectUser(db *sqlx.DB, email string) (models.User, error) {
+	const sqlStr = `
+	SELECT id, name, email, password_hash, uuid, is_valid, created_at
+	FROM users
+	WHERE email = ?;
+	`
+
+	var user models.User
+	if err := db.QueryRowx(sqlStr, email).StructScan(&user); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			err = myerrors.NoData.Wrap(err, "email is not registered")
+			return models.User{}, err
+		} else {
+			err = myerrors.GetDataFailed.Wrap(err, "internal server error")
+			return models.User{}, err
+		}
+	}
+
+	return user, nil
 }
 
 func UpdateActivate(db *sqlx.DB, uuid string) error {
@@ -52,6 +73,7 @@ func UpdateActivate(db *sqlx.DB, uuid string) error {
 	return nil
 }
 
+// SelectUserでいいのでは？
 func GetAuthInfo(db *sqlx.DB, email string) (models.User, error) {
 	const sqlStr = `
 	SELECT password_hash, uuid, is_valid
