@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
     id INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
-    password_hash VARCHAR(100) NOT NULL,
+    password_hash TEXT NOT NULL,
     uuid VARCHAR(100) UNIQUE,
     is_valid BOOLEAN NOT NULL,
     created_at DATETIME
@@ -76,10 +76,10 @@ VALUES (
 
 INSERT INTO users (name, email, password_hash, uuid, is_valid, created_at)
 VALUES (
-    "test1",
-    "test1",
-    "test1",
-    "test1",
+    "test",
+    "ajalgun@fe.gy",
+    "ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff",
+    "7c19a998-eac3-55be-827e-05809d977ce8",
     TRUE,
     "2023-01-28 12:00:00"
 );
